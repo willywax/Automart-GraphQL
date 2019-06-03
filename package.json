@@ -24,6 +24,10 @@
   },
   "author": "willywax",
   "license": "ISC",
+  "engines" : {
+    "node" : "11.4.0",
+    "npm" : "6.9.0"
+  },
   "dependencies": {
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
