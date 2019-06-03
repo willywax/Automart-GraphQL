@@ -28,9 +28,9 @@ describe("Model Tests", () => {
 
     const person2 = new User(
       "Manka",
-      "Zima",
+      "Zimazile",
       "123123",
-      "w@station.com",
+      "zima@station.com",
       "144 Peter Road",
       false
     );
@@ -38,7 +38,7 @@ describe("Model Tests", () => {
     it("should save user successfully", () => {
       User.saveUser(person);
 
-      assert.equal(User.getUsers().length, 1);
+      assert.notEqual(User.getUsers().length, 0);
     });
 
     it("should return id", () => {
@@ -103,14 +103,14 @@ describe("Model Tests", () => {
       firstName: "William",
       lastName: "Max",
       password: "123123",
-      email: "w@station.com",
+      email: "register@station.com",
       address: "144 Peter Road",
       isAdmin: false
     };
 
     it("Verifies Users is registed successfully", done => {
       requester
-        .post("/auth/signup")
+        .post("/api/v1/auth/signup")
         .send(person)
         .end((err, res) => {
           expect(res).to.have.status(201);
