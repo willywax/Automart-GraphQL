@@ -31,6 +31,10 @@ app.use(bodyParser.json());
 
 data.populateData();
 
+app.get("/", (req, res) => {
+  res.send("Success: Last updated on" + new Date());
+});
+
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/car", carRouter);
 app.use("/api/v1/order", orderRouter);
