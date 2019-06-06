@@ -87,8 +87,6 @@ class Car {
     return cars;
   }
 
-  static validateKeys(keys) {}
-
   static deleteOne(car) {
     let result = null;
     for (let i = 0; i < carData.length; i++) {
