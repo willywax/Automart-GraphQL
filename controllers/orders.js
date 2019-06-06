@@ -37,11 +37,12 @@ exports.updatePrice = (req, res, next) => {
       data: result
     };
 
-    if (result !== null) {
-      res.status(200).json(data);
-    } else {
-      res.status(404).json(data);
-    }
+    res.status(200).json(data);
+    // if (result !== null) {
+    //   res.status(200).json(data);
+    // } else {
+    //   res.status(404).json(data);
+    // }
   } else {
     res.status(404).json("Error");
   }

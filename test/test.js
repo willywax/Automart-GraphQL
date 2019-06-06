@@ -164,14 +164,26 @@ describe("Model Tests", () => {
 
       assert.equal(car.price, result.price);
     });
-    it("Checks return cars array", () => {
-      let results = Car.getCars();
-      let lastCar = results[results.length - 1];
 
-      //Compares the last car in the array to the car last entered
-      assert.equal(car.price, lastCar.price);
+    it("Saves Car using Controller", done => {
+      let carObject = {
+        owner: person.id,
+        state: "used",
+        price: 56000,
+        manufacturer: "Jeep",
+        model: "Gladiator",
+        body_type: "Pick Up"
+      };
+
+      requester
+        .post("/car")
+        .send(carObject)
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+
+          done();
+        });
     });
-
     it("Returns Car from list of cars", () => {
       requester
         .get("/car/" + car.id)
@@ -188,13 +200,6 @@ describe("Model Tests", () => {
         .end((err, res) => {
           expect(res).to.have.status(404);
         });
-    });
-
-    it("Should update car successfully", () => {
-      car.price = 25000;
-      let result = Car.updateOne(car);
-
-      assert.equal(result.price, 25000);
     });
 
     it("Should search car successfully by price range", done => {
@@ -248,6 +253,21 @@ describe("Model Tests", () => {
         });
     });
 
+    it("Update Price Fails if wrong car Id", done => {
+      let price = {
+        price: 12000
+      };
+
+      requester
+        .patch("/car/123123/price")
+        .send(price)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+
+          done();
+        });
+    });
+
     it("Should update Car Status Successfully", done => {
       let status = {
         status: "sold"
@@ -258,6 +278,21 @@ describe("Model Tests", () => {
         .send(status)
         .end((err, res) => {
           expect(res).to.have.status(200);
+
+          done();
+        });
+    });
+
+    it("Update Status Fails if wrong car Id", done => {
+      let status = {
+        status: "sold"
+      };
+
+      requester
+        .patch("/car/123123/status")
+        .send(status)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
 
           done();
         });

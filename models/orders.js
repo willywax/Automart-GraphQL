@@ -49,10 +49,7 @@ class Order {
         break;
       }
     }
-    if (result !== null) {
-      // result.old_price_offered = old_price;
-      // result.new_price_offered = new_price
-    }
+
     return result;
   }
 
