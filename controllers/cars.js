@@ -44,7 +44,12 @@ exports.getCar = (req, res, next) => {
     status: 200,
     data: car
   };
-  res.status(200).json(data);
+  if (car != null) {
+    res.status(200).json(data);
+  } else {
+    data.status = 404;
+    res.status(404).json(data);
+  }
 };
 
 exports.updatePrice = (req, res, next) => {

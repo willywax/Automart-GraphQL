@@ -14,6 +14,7 @@ const app = require("../app");
 
 const User = require("../models/users");
 const Car = require("../models/cars");
+const Order = require("../models/orders");
 
 //const data = require('../models/testData');
 // const userController = require('../controllers/users');
@@ -36,6 +37,11 @@ describe("Model Tests", () => {
     "144 Peter Road",
     false
   );
+
+  let car = new Car(person.id, "used", 20000, "Toyota", "Brevis", "car");
+
+  let order = new Order(person2.id, car.id, 15000);
+
   describe("User Model", () => {
     it("should save user successfully", () => {
       User.saveUser(person);
@@ -119,11 +125,24 @@ describe("Model Tests", () => {
           done();
         });
     });
+
+    it("Logins user with correct credentials", done => {
+      const login = {
+        email: "register@station.com",
+        password: "123123"
+      };
+
+      requester
+        .post("/api/v1/auth/signin")
+        .send(login)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          done();
+        });
+    });
   });
 
   describe("Cars Model", () => {
-    let car = new Car("123123", "used", 20000, "Toyota", "Brevis", "car");
-
     it("saves Car", () => {
       let result = Car.saveCar(car);
 
@@ -138,17 +157,21 @@ describe("Model Tests", () => {
     });
 
     it("Returns Car from list of cars", () => {
-      let result = Car.findOne(car.id);
-
-      assert.notEqual(result, null);
+      requester
+        .get("/api/v1/car/" + car.id)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+        });
     });
 
     it("Should return null car not found", () => {
-      let newCar = new Car("123123", "used", 20000, "Benz", "C-Class", "car");
-
-      let result = Car.findOne(newCar.id);
-
-      assert.equal(result, null);
+      requester
+        .get("/api/v1/car/123")
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+        });
     });
 
     it("Should update car successfully", () => {
@@ -158,45 +181,171 @@ describe("Model Tests", () => {
       assert.equal(result.price, 25000);
     });
 
-    it("Should search car successfully by price range", () => {
-      let query = {
-        min_price: 10000,
-        max_price: 30000
-      };
+    it("Should search car successfully by price range", done => {
+      requester
+        .get("/api/v1/car?min_price=10000&max_price=30000")
+        .send()
+        .end((err, res) => {
+          let data = res.data;
+          assert.notEqual(data, 0);
 
-      let result = Car.searchCar(query);
+          done();
+        });
+      // let query = {
+      //   min_price: 10000,
+      //   max_price: 30000
+      // };
 
-      assert.notEqual(result.length, 0);
+      // let result = Car.searchCar(query);
+
+      // assert.notEqual(result.length, 0);
     });
 
-    it("Should return null of wrong queries", () => {
+    it("Should return null of wrong queries", done => {
       //Make is a wrong query
-      let query = {
-        make: "Benz"
-      };
+      requester
+        .get("/api/v1/car?make=Toyota")
+        .send()
+        .end((err, res) => {
+          //console.log(res);
+          expect(res.body.data.length).equal(0);
+          // let data = res.data;
+          //assert.equal(0,0);
 
-      let result = Car.searchCar(query);
-
-      assert.equal(result.length, 0);
+          done();
+        });
     });
 
-    it("Should filter by either manufacturer, model or year if car exists", () => {
-      //Make is a wrong query
-      let query = {
-        manufacturer: "Benz"
+    it("Should filter by either manufacturer, model or year if car exists", done => {
+      requester
+        .get("/api/v1/car?manufacturer=Benz")
+        .send()
+        .end((err, res) => {
+          let data = res.body.data;
+          //console.log(data);
+          assert.notEqual(data.length, 0);
+
+          done();
+        });
+    });
+    it("Should update Car price Successfully", done => {
+      let price = {
+        price: 12000
       };
 
-      let result = Car.searchCar(query);
+      requester
+        .patch("/api/v1/car/" + car.id + "/price")
+        .send(price)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
 
-      assert.notEqual(result.length, 0);
+          done();
+        });
     });
 
-    it("Should delete Car successfully", () => {
-      let result = Car.deleteOne(car);
+    it("Should update Car Status Successfully", done => {
+      let status = {
+        status: "sold"
+      };
 
-      let found = Car.findOne(car.id);
+      requester
+        .patch("/api/v1/car/" + car.id + "/status")
+        .send(status)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
 
-      assert.equal(found, null);
+          done();
+        });
+    });
+
+    it("Should delete Car successfully", done => {
+      requester
+        .delete("/api/v1/car/" + car.id)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+
+          done();
+        });
+    });
+
+    it("Should fail to delete Car", done => {
+      requester
+        .delete("/api/v1/car/" + car.id)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+
+          done();
+        });
+    });
+  });
+
+  describe("Orders Model", () => {
+    it("Saves order successfully", done => {
+      let orderObject = {
+        buyer: person.id,
+        car: car.id,
+        amount: 150000
+      };
+
+      requester
+        .post("/api/v1/order")
+        .send(orderObject)
+        .end((err, res) => {
+          //let data = res.data;
+          //assert.equal(car.id, data.car_id);
+          expect(res).to.have.status(201);
+          done();
+        });
+    });
+
+    it("Save Order through Model", () => {
+      let result = Order.saveOrder(order);
+
+      assert(result.car_id, order.car_id);
+    });
+
+    it("Finds the Order by Id", () => {
+      let result = Order.findOne(order.id);
+
+      assert.equal(order.car, result.car);
+    });
+
+    it("Gets All Orders", done => {
+      requester
+        .get("/api/v1/order")
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          done();
+        });
+    });
+
+    it("Updates Order Price", done => {
+      const data = {
+        price: 12500
+      };
+      requester
+        .patch("/api/v1/order/" + order.id + "/price")
+        .send(data)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          done();
+        });
+    });
+
+    it("Returns error to update wrong Id", done => {
+      const data = {
+        price: 15500
+      };
+      requester
+        .patch("/api/v1/order/120/price")
+        .send(data)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          done();
+        });
     });
   });
 });
