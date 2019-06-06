@@ -39,6 +39,7 @@ describe("Model Tests", () => {
   );
 
   let car = new Car(person.id, "used", 20000, "Toyota", "Brevis", "car");
+  //let car = new Car(person.id, "used", 20000, "Toyota", "Brevis", "car");
 
   let order = new Order(person2.id, car.id, 15000);
 
@@ -137,6 +138,21 @@ describe("Model Tests", () => {
         .send(login)
         .end((err, res) => {
           expect(res).to.have.status(200);
+          done();
+        });
+    });
+
+    it("Logins user with Incorrect credentials", done => {
+      const login = {
+        email: "registe@station.com",
+        password: "12312"
+      };
+
+      requester
+        .post("/auth/signin")
+        .send(login)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
           done();
         });
     });
