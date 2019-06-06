@@ -335,4 +335,34 @@ describe("Model Tests", () => {
         });
     });
   });
+
+  describe("Flags Model", () => {
+    it("should flag a car", done => {
+      const flag = {
+        car: car.id,
+        reason: "Wrong Car",
+        description: "Car doesnot match details"
+      };
+
+      requester
+        .post("/flag")
+        .send(flag)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+
+          done();
+        });
+    });
+
+    it("Should return all flags", done => {
+      requester
+        .get("/flag")
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+
+          done();
+        });
+    });
+  });
 });
