@@ -6,7 +6,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-const url = "http://localhost:3000";
+const url = "http://localhost:3000/api/v1";
 const requester = chai.request.agent(url);
 
 const index = require("../index");
@@ -118,7 +118,7 @@ describe("Model Tests", () => {
 
     it("Verifies Users is registed successfully", done => {
       requester
-        .post("/api/v1/auth/signup")
+        .post("/auth/signup")
         .send(person)
         .end((err, res) => {
           expect(res).to.have.status(201);
@@ -133,7 +133,7 @@ describe("Model Tests", () => {
       };
 
       requester
-        .post("/api/v1/auth/signin")
+        .post("/auth/signin")
         .send(login)
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -158,7 +158,7 @@ describe("Model Tests", () => {
 
     it("Returns Car from list of cars", () => {
       requester
-        .get("/api/v1/car/" + car.id)
+        .get("/car/" + car.id)
         .send()
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -167,7 +167,7 @@ describe("Model Tests", () => {
 
     it("Should return null car not found", () => {
       requester
-        .get("/api/v1/car/123")
+        .get("/car/123")
         .send()
         .end((err, res) => {
           expect(res).to.have.status(404);
@@ -183,7 +183,7 @@ describe("Model Tests", () => {
 
     it("Should search car successfully by price range", done => {
       requester
-        .get("/api/v1/car?min_price=10000&max_price=30000")
+        .get("/car?min_price=10000&max_price=30000")
         .send()
         .end((err, res) => {
           let data = res.data;
@@ -191,26 +191,15 @@ describe("Model Tests", () => {
 
           done();
         });
-      // let query = {
-      //   min_price: 10000,
-      //   max_price: 30000
-      // };
-
-      // let result = Car.searchCar(query);
-
-      // assert.notEqual(result.length, 0);
     });
 
     it("Should return null of wrong queries", done => {
       //Make is a wrong query
       requester
-        .get("/api/v1/car?make=Toyota")
+        .get("/car?make=Toyota")
         .send()
         .end((err, res) => {
-          //console.log(res);
           expect(res.body.data.length).equal(0);
-          // let data = res.data;
-          //assert.equal(0,0);
 
           done();
         });
@@ -218,7 +207,7 @@ describe("Model Tests", () => {
 
     it("Should filter by either manufacturer, model or year if car exists", done => {
       requester
-        .get("/api/v1/car?manufacturer=Benz")
+        .get("/car?manufacturer=Benz")
         .send()
         .end((err, res) => {
           let data = res.body.data;
@@ -234,7 +223,7 @@ describe("Model Tests", () => {
       };
 
       requester
-        .patch("/api/v1/car/" + car.id + "/price")
+        .patch("/car/" + car.id + "/price")
         .send(price)
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -249,7 +238,7 @@ describe("Model Tests", () => {
       };
 
       requester
-        .patch("/api/v1/car/" + car.id + "/status")
+        .patch("/car/" + car.id + "/status")
         .send(status)
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -260,7 +249,7 @@ describe("Model Tests", () => {
 
     it("Should delete Car successfully", done => {
       requester
-        .delete("/api/v1/car/" + car.id)
+        .delete("/car/" + car.id)
         .send()
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -271,7 +260,7 @@ describe("Model Tests", () => {
 
     it("Should fail to delete Car", done => {
       requester
-        .delete("/api/v1/car/" + car.id)
+        .delete("/car/" + car.id)
         .send()
         .end((err, res) => {
           expect(res).to.have.status(404);
@@ -290,11 +279,9 @@ describe("Model Tests", () => {
       };
 
       requester
-        .post("/api/v1/order")
+        .post("/order")
         .send(orderObject)
         .end((err, res) => {
-          //let data = res.data;
-          //assert.equal(car.id, data.car_id);
           expect(res).to.have.status(201);
           done();
         });
@@ -314,7 +301,7 @@ describe("Model Tests", () => {
 
     it("Gets All Orders", done => {
       requester
-        .get("/api/v1/order")
+        .get("/order")
         .send()
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -327,7 +314,7 @@ describe("Model Tests", () => {
         price: 12500
       };
       requester
-        .patch("/api/v1/order/" + order.id + "/price")
+        .patch("/order/" + order.id + "/price")
         .send(data)
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -340,7 +327,7 @@ describe("Model Tests", () => {
         price: 15500
       };
       requester
-        .patch("/api/v1/order/120/price")
+        .patch("/order/120/price")
         .send(data)
         .end((err, res) => {
           expect(res).to.have.status(404);
