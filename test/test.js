@@ -228,13 +228,56 @@ describe("Model Tests", () => {
           done();
         });
     });
+    it("Should update Car price Successfully", done => {
+      let price = {
+        price: 12000
+      };
 
-    it("Should delete Car successfully", () => {
-      let result = Car.deleteOne(car);
+      requester
+        .patch("/api/v1/car/" + car.id + "/price")
+        .send(price)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
 
-      let found = Car.findOne(car.id);
+          done();
+        });
+    });
 
-      assert.equal(found, null);
+    it("Should update Car Status Successfully", done => {
+      let status = {
+        status: "sold"
+      };
+
+      requester
+        .patch("/api/v1/car/" + car.id + "/status")
+        .send(status)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+
+          done();
+        });
+    });
+
+    it("Should delete Car successfully", done => {
+      requester
+        .delete("/api/v1/car/" + car.id)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+
+          done();
+        });
+    });
+
+    it("Should fail to delete Car", done => {
+      requester
+        .delete("/api/v1/car/" + car.id)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+
+          done();
+        });
     });
   });
 
