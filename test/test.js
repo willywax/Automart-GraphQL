@@ -329,6 +329,9 @@ describe("Model Tests", () => {
         amount: 150000
       };
 
+      // console.log(orderObject);
+      // assert.equal(0,0);
+      // done();
       requester
         .post("/order")
         .send(orderObject)
@@ -345,7 +348,7 @@ describe("Model Tests", () => {
     });
 
     it("Finds the Order by Id", () => {
-      let result = Order.findOne(order.id);
+      let result = Order.findById(order.id);
 
       assert.equal(order.car, result.car);
     });
@@ -362,7 +365,7 @@ describe("Model Tests", () => {
 
     it("Updates Order Price", done => {
       const data = {
-        price: 12500
+        amount: 12500
       };
       requester
         .patch("/order/" + order.id + "/price")
@@ -375,7 +378,7 @@ describe("Model Tests", () => {
 
     it("Returns error to update wrong Id", done => {
       const data = {
-        price: 15500
+        amount: 15500
       };
       requester
         .patch("/order/120/price")

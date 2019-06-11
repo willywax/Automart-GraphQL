@@ -87,13 +87,14 @@ exports.checks = {
       .trim(" ")
       .isString()
       .escape()
-      .custom(value => {
-        let result = User.findUserById(value);
-        if (result === null) {
-          return Promise.reject("Invalid Buyer Id used");
-        }
-        return true;
-      }),
+      .withMessage("buyer is a required Field"),
+    check("buyer").custom(value => {
+      let result = User.findUserById(value);
+      if (result === null) {
+        return Promise.reject("Invalid Buyer Id used");
+      }
+      return true;
+    }),
     check("amount")
       .isDecimal()
       .withMessage("amount is a required Field")
