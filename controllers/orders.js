@@ -4,7 +4,7 @@ exports.saveOrder = (req, res, next) => {
   const newOrder = new Order(req.body.buyer, req.body.car, req.body.amount);
 
   Order.saveOrder(newOrder);
-  const order = Order.findOne(newOrder.id);
+  const order = Order.findById(newOrder.id);
 
   const data = {
     status: 201,
@@ -26,9 +26,9 @@ exports.getOrder = (req, res, next) => {
 };
 
 exports.updatePrice = (req, res, next) => {
-  const order = Order.findOne(req.params.id);
+  const order = Order.findById(req.params.id);
 
-  if (order !== null) {
+  if (order !== null && order.status === "pending") {
     order.price_offered = req.body.amount;
     const result = Order.updateOrder(order);
 
@@ -38,12 +38,33 @@ exports.updatePrice = (req, res, next) => {
     };
 
     res.status(200).json(data);
-    // if (result !== null) {
-    //   res.status(200).json(data);
-    // } else {
-    //   res.status(404).json(data);
-    // }
   } else {
-    res.status(404).json("Error");
+    const data = {
+      status: 404,
+      error: "Order not found or is not pending"
+    };
+    res.status(404).json(data);
+  }
+};
+
+exports.updateStatus = (req, res, next) => {
+  const order = Order.findById(req.params.id);
+
+  if (order !== null) {
+    order.status = req.body.status;
+    const result = Order.updateOrder(order);
+
+    const data = {
+      status: 200,
+      data: result
+    };
+
+    res.status(200).json(data);
+  } else {
+    const data = {
+      status: 404,
+      error: "Order not found or is not pending"
+    };
+    res.status(404).json(data);
   }
 };

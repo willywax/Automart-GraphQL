@@ -71,6 +71,24 @@ class User {
     }
     return null;
   }
+
+  static findUserByEmail(email) {
+    for (let i = 0; i < userData.length; i++) {
+      if (userData[i].email === email) {
+        return userData[i];
+      }
+    }
+    return null;
+  }
+
+  static findUserById(user_id) {
+    for (let i = 0; i < userData.length; i++) {
+      if (userData[i].id === user_id) {
+        return userData[i];
+      }
+    }
+    return null;
+  }
 }
 
 module.exports = User;

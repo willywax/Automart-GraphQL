@@ -38,7 +38,7 @@ exports.getCars = (req, res, next) => {
 };
 
 exports.getCar = (req, res, next) => {
-  const car = Car.findOne(req.params.id);
+  const car = Car.findById(req.params.id);
 
   const data = {
     status: 200,
@@ -53,7 +53,7 @@ exports.getCar = (req, res, next) => {
 };
 
 exports.updatePrice = (req, res, next) => {
-  const car = Car.findOne(req.params.id);
+  const car = Car.findById(req.params.id);
 
   if (car !== null) {
     car.price = req.body.price;
@@ -71,7 +71,7 @@ exports.updatePrice = (req, res, next) => {
 };
 
 exports.updateStatus = (req, res, next) => {
-  const car = Car.findOne(req.params.id);
+  const car = Car.findById(req.params.id);
 
   if (car !== null) {
     car.status = req.body.status;
@@ -89,7 +89,7 @@ exports.updateStatus = (req, res, next) => {
 };
 
 exports.deleteCar = (req, res, next) => {
-  const car = Car.findOne(req.params.id);
+  const car = Car.findById(req.params.id);
 
   if (car !== null) {
     const result = Car.deleteOne(car);

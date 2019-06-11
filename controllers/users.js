@@ -1,7 +1,12 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 
+const { validationResult } = require("express-validator/check");
+
 exports.signUp = (req, res, next) => {
+  // var errors = validationResult(req);
+
+  // if (errors.isEmpty()) {
   const newUser = new User(
     req.body.firstName,
     req.body.lastName,
@@ -24,6 +29,9 @@ exports.signUp = (req, res, next) => {
     data: user
   };
   res.status(201).json(data);
+  //} else {
+  //   res.status(422).json(errors.array());
+  // }
 };
 
 exports.login = (req, res, next) => {

@@ -14,7 +14,7 @@ class Order {
     this.price_offered = amount;
   }
 
-  static findOne(order) {
+  static findById(order) {
     let result = null;
     for (let i = 0; i < orderData.length; i++) {
       if (order === orderData[i].id) {
@@ -23,7 +23,7 @@ class Order {
       }
     }
     if (result !== null) {
-      const car = Car.findOne(result.car_id);
+      const car = Car.findById(result.car_id);
       result.price = car !== null ? car.price : "None";
     }
     return result;
@@ -38,18 +38,13 @@ class Order {
 
   static updateOrder(order) {
     let result = null;
-    let old_price;
-    const new_price = 0;
     for (let i = 0; i < orderData.length; i++) {
       if (order.id === orderData[i].id) {
-        // old_price = orderData[i].price_offered;
-        // new_price = order.price_offered;
         orderData[i] = order;
         result = order;
         break;
       }
     }
-
     return result;
   }
 
