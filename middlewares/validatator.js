@@ -71,6 +71,17 @@ exports.checks = {
       .withMessage("body_type is required")
   ],
   postOrderCheck: [
+    check("buyer")
+      .trim(" ")
+      .escape()
+      .isString()
+      .custom(value => {
+        let result = User.findUserById(value);
+        if (result === null) {
+          return Promise.reject("Invalid Owner Id used");
+        }
+        return true;
+      }),
     check("car")
       .trim(" ")
       .isString()
@@ -83,17 +94,6 @@ exports.checks = {
       }
       return true;
     }),
-    check("buyer")
-      .trim(" ")
-      .isString()
-      .escape()
-      .custom(value => {
-        let result = User.findUserById(value);
-        if (result === null) {
-          return Promise.reject("Invalid Buyer Id used");
-        }
-        return true;
-      }),
     check("amount")
       .isDecimal()
       .withMessage("amount is a required Field")
