@@ -71,6 +71,17 @@ exports.checks = {
       .withMessage("body_type is required")
   ],
   postOrderCheck: [
+    check("buyer")
+      .trim(" ")
+      .escape()
+      .isString()
+      .custom(value => {
+        let result = User.findUserById(value);
+        if (result === null) {
+          return Promise.reject("Invalid Owner Id used");
+        }
+        return true;
+      }),
     check("car")
       .trim(" ")
       .isString()
@@ -80,18 +91,6 @@ exports.checks = {
       let result = Car.findById(value);
       if (result === null) {
         return Promise.reject("Invalid Car Id used");
-      }
-      return true;
-    }),
-    check("buyer")
-      .trim(" ")
-      .isString()
-      .escape()
-      .withMessage("buyer is a required Field"),
-    check("buyer").custom(value => {
-      let result = User.findUserById(value);
-      if (result === null) {
-        return Promise.reject("Invalid Buyer Id used");
       }
       return true;
     }),
