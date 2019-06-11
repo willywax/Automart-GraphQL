@@ -1,7 +1,8 @@
-const { check } = require("express-validator/check");
+const { check, validationResult } = require("express-validator/check");
 
 const User = require("../models/users");
-module.exports = {
+
+exports.checks = {
   singUpCheck: [
     check("email")
       .isEmail()
@@ -28,5 +29,41 @@ module.exports = {
       }
       return true;
     })
+  ],
+  singInCheck: [
+    check("email")
+      .isEmail()
+      .withMessage("Must be a valid Email"),
+    check("password")
+      .trim(" ")
+      .isLength({ min: 1 })
+      .withMessage("password is field is required")
+  ],
+  postCarCheck: [
+    check("owner")
+      .trim(" ")
+      .escape()
+      .isString()
+      .custom(value => {
+        let result = User.findUserById(value);
+        if (result === null) {
+          return Promise.reject("Invalid Owner");
+        }
+        return true;
+      }),
+    check("state").isIn(["used", "new"]),
+    check("status")
+      .optional()
+      .isIn(["available", "sold"])
   ]
+};
+
+exports.validationResults = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json(errors.array());
+  } else {
+    next();
+  }
 };
