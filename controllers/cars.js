@@ -52,31 +52,17 @@ exports.getCar = (req, res, next) => {
   }
 };
 
-exports.updatePrice = (req, res, next) => {
+exports.updateCar = (req, res, next) => {
   const car = Car.findById(req.params.id);
 
   if (car !== null) {
-    car.price = req.body.price;
+    if (req.body.price) {
+      car.price = req.body.price;
+    } else {
+      car.status = req.body.status;
+    }
+
     const result = Car.updateOne(car);
-
-    const data = {
-      status: 200,
-      data: result
-    };
-
-    res.status(200).json(data);
-  } else {
-    res.status(404).json("Error Occured");
-  }
-};
-
-exports.updateStatus = (req, res, next) => {
-  const car = Car.findById(req.params.id);
-
-  if (car !== null) {
-    car.status = req.body.status;
-    const result = Car.updateOne(car);
-
     const data = {
       status: 200,
       data: result
