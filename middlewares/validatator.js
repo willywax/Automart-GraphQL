@@ -47,14 +47,27 @@ exports.checks = {
       .custom(value => {
         let result = User.findUserById(value);
         if (result === null) {
-          return Promise.reject("Invalid Owner");
+          return Promise.reject("Invalid Owner Id used");
         }
         return true;
       }),
-    check("state").isIn(["used", "new"]),
+    check("state")
+      .isIn(["used", "new"])
+      .withMessage("State needs to be [used, new] "),
     check("status")
       .optional()
       .isIn(["available", "sold"])
+      .withMessage("Status needs to be [available, sold] "),
+    check("model")
+      .isString()
+      .trim(" ")
+      .escape()
+      .withMessage("model is required"),
+    check("body_type")
+      .isString()
+      .escape()
+      .trim(" ")
+      .withMessage("body_type is required")
   ]
 };
 
