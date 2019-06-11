@@ -27,6 +27,7 @@ app.use((req, res, next) => {
 
 app.use(express.static(`${__dirname}/UI`));
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 data.populateData();
