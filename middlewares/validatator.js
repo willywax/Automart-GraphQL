@@ -97,6 +97,16 @@ exports.checks = {
     check("amount")
       .isDecimal()
       .withMessage("amount is a required Field")
+  ],
+  updateOrderPriceCheck: [
+    check("amount")
+      .isDecimal()
+      .withMessage("amount field is required")
+  ],
+  updateOrderStatusCheck: [
+    check("status")
+      .isIn(["pending", "accepted", "rejected"])
+      .withMessage("State needs to be [pending, accepted, rejected] ")
   ]
 };
 

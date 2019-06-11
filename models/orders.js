@@ -14,7 +14,7 @@ class Order {
     this.price_offered = amount;
   }
 
-  static findOne(order) {
+  static findById(order) {
     let result = null;
     for (let i = 0; i < orderData.length; i++) {
       if (order === orderData[i].id) {
@@ -38,8 +38,6 @@ class Order {
 
   static updateOrder(order) {
     let result = null;
-    let old_price;
-    const new_price = 0;
     for (let i = 0; i < orderData.length; i++) {
       if (order.id === orderData[i].id) {
         orderData[i] = order;
@@ -47,7 +45,6 @@ class Order {
         break;
       }
     }
-
     return result;
   }
 

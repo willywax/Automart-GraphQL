@@ -13,6 +13,17 @@ router.post(
   orderController.saveOrder
 );
 router.get("/", orderController.getOrder);
-router.patch("/:id/price", orderController.updatePrice);
+router.patch(
+  "/:id/price",
+  validators.checks.updateOrderPriceCheck,
+  validators.validationResults,
+  orderController.updatePrice
+);
+router.patch(
+  "/:id/status",
+  validators.checks.updateOrderStatusCheck,
+  validators.validationResults,
+  orderController.updateStatus
+);
 
 module.exports = router;
