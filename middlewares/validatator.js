@@ -1,6 +1,7 @@
 const { check, validationResult } = require("express-validator/check");
 
 const User = require("../models/users");
+const Car = require("../models/cars");
 
 exports.checks = {
   singUpCheck: [
@@ -68,6 +69,34 @@ exports.checks = {
       .escape()
       .trim(" ")
       .withMessage("body_type is required")
+  ],
+  postOrderCheck: [
+    check("car")
+      .trim(" ")
+      .isString()
+      .escape()
+      .withMessage("Car is a required Field"),
+    check("car").custom(value => {
+      let result = Car.findById(value);
+      if (result === null) {
+        return Promise.reject("Invalid Car Id used");
+      }
+      return true;
+    }),
+    check("buyer")
+      .trim(" ")
+      .isString()
+      .escape()
+      .custom(value => {
+        let result = User.findUserById(value);
+        if (result === null) {
+          return Promise.reject("Invalid Buyer Id used");
+        }
+        return true;
+      }),
+    check("amount")
+      .isDecimal()
+      .withMessage("amount is a required Field")
   ]
 };
 
