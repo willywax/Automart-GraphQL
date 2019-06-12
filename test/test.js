@@ -39,7 +39,7 @@ describe("Model Tests", () => {
   );
 
   let car = new Car(person.id, "used", 20000, "Toyota", "Brevis", "car");
-  //let car = new Car(person.id, "used", 20000, "Toyota", "Brevis", "car");
+  let car2 = new Car(person.id, "used", 20000, "Toyota", "Brevis", "car");
 
   let order = new Order(person2.id, car.id, 15000);
 
@@ -321,21 +321,23 @@ describe("Model Tests", () => {
   });
 
   describe("Orders Model", () => {
-    // it("Saves order successfully", done => {
-    //   let orderObject = {
-    //     buyer: person.id,
-    //     car: car.id,
-    //     amount: 150000
-    //   };
+    it("Saves order successfully", done => {
+      Car.saveCar(car2);
 
-    //   requester
-    //     .post("/order")
-    //     .send(orderObject)
-    //     .end((err, res) => {
-    //       expect(res).to.have.status(201);
-    //       done();
-    //     });
-    // });
+      let orderObject = {
+        buyer: person.id,
+        car: car2.id,
+        amount: 150000
+      };
+
+      requester
+        .post("/order")
+        .send(orderObject)
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          done();
+        });
+    });
 
     it("Save Order through Model", () => {
       let result = Order.saveOrder(order);
