@@ -89,7 +89,6 @@ class Car {
     for (let i = 0; i < carData.length; i++) {
       if (carData[i].id === car.id) {
         carData.splice(i, 1);
-        // carData[i] = car;
         result = car;
         break;
       }

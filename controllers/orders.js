@@ -2,7 +2,6 @@ const Order = require("../models/orders");
 const Car = require("../models/cars");
 
 exports.saveOrder = (req, res, next) => {
-  //User making the request's Id is automatically used to create PO
   const buyer = req.body.token.userId;
 
   const car = Car.findById(req.body.car);
@@ -30,7 +29,7 @@ exports.getOrder = (req, res, next) => {
   let orders = [];
 
   if (!req.body.token.role) {
-    //Get Orders created buy the User
+    /*Get Orders created buy the User*/
     orders = Order.getOrdersByUser(req.body.token.userId);
   } else {
     orders = Order.getOrders();

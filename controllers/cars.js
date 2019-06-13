@@ -1,7 +1,7 @@
 const Car = require("../models/cars");
 
 exports.saveCar = (req, res, next) => {
-  //UserId from token is used to create the Car Ad
+  /*UserId from token is used to create the Car Ad*/
   const newCar = new Car(
     req.body.token.userId,
     req.body.state,
