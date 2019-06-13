@@ -1,8 +1,9 @@
 const Car = require("../models/cars");
 
 exports.saveCar = (req, res, next) => {
+  //UserId from token is used to create the Car Ad
   const newCar = new Car(
-    req.body.owner,
+    req.body.token.userId,
     req.body.state,
     req.body.price,
     req.body.manufacturer,
@@ -70,7 +71,9 @@ exports.updateCar = (req, res, next) => {
 
     res.status(200).json(data);
   } else {
-    res.status(404).json("Error Occured");
+    res.status(404).json({
+      error: "Car not Found. Invalid Car Id used"
+    });
   }
 };
 

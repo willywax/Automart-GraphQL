@@ -52,6 +52,16 @@ class Order {
     return orderData;
   }
 
+  static getOrdersByUser(user_id) {
+    let result = [];
+    for (let i = 0; i < orderData.length; i++) {
+      if (user_id === orderData[i].buyer) {
+        result.push(orderData[i]);
+      }
+    }
+    return result;
+  }
+
   generateId() {
     return uuid.v1();
   }

@@ -9,12 +9,12 @@ exports.populateData = () => {
     "123123",
     "w@stations.com",
     "144 Peter Road",
-    false
+    true
   );
   const seller2 = new User(
     "Nyambuks",
     "Colgate",
-    "111111",
+    "123123",
     "n@stations.com",
     "144 Peter Road",
     false
@@ -24,10 +24,13 @@ exports.populateData = () => {
     "Manka",
     "Zima",
     "123123",
-    "w@station.com",
+    "buyer@station.com",
     "144 Peter Road",
     false
   );
+
+  //Creating a super User
+  seller.is_admin = true;
 
   User.saveUser(seller);
   User.saveUser(buyer);
