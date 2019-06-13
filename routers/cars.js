@@ -31,6 +31,6 @@ router.patch(
   validator.validationResults,
   carController.updateCar
 );
-router.delete("/:id", carController.deleteCar);
+router.delete("/:id", auth, carController.deleteCar);
 
 module.exports = router;

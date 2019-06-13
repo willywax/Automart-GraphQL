@@ -81,14 +81,22 @@ exports.deleteCar = (req, res, next) => {
   const car = Car.findById(req.params.id);
 
   if (car !== null) {
-    const result = Car.deleteOne(car);
+    if (req.body.token.role || req.body.token.userId === car.owner) {
+      const result = Car.deleteOne(car);
 
-    const data = {
-      status: 200,
-      data: result
-    };
+      const data = {
+        status: 200,
+        data: result
+      };
 
-    res.status(200).json(data);
+      res.status(200).json(data);
+    } else {
+      res.status(401).json({
+        error: "Not Authorised to delete Car"
+      });
+    }
   }
-  res.status(404).json("Failed");
+  res.status(404).json({
+    error: "Car not Found"
+  });
 };

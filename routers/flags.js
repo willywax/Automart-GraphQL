@@ -4,7 +4,9 @@ const router = express.Router();
 
 const flagController = require("../controllers/flags");
 
-router.post("/", flagController.flagCar);
-router.get("/", flagController.getFlags);
+const auth = require("../middlewares/authentication");
+
+router.post("/", auth, flagController.flagCar);
+router.get("/", auth, flagController.getFlags);
 
 module.exports = router;

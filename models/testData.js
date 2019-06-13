@@ -15,7 +15,7 @@ exports.populateData = () => {
     "Nyambuks",
     "Colgate",
     "123123",
-    "n@stations.com",
+    "seller@stations.com",
     "144 Peter Road",
     false
   );
