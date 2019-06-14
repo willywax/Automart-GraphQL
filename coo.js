@@ -183,60 +183,24 @@ describe("Model Tests", () => {
           done();
         });
     });
-    it("Returns Car from list of cars", () => {
+
+    /** Failed  */
+    it("Should update Car price Successfully", done => {
+      let price = {
+        price: 12000
+      };
       requester
-        .get("/car/" + car.id)
-        .send()
+        .patch("/car/" + car.id + "/price")
+        .set("Authorization", dataSet.data.users.sellerToken)
+        .send(price)
         .end((err, res) => {
           expect(res).to.have.status(200);
-        });
-    });
-
-    it("Should return null car not found", () => {
-      requester
-        .get("/car/123")
-        .send()
-        .end((err, res) => {
-          expect(res).to.have.status(404);
-        });
-    });
-
-    it("Should search car successfully by price range", done => {
-      requester
-        .get("/car?min_price=10000&max_price=30000")
-        .send()
-        .end((err, res) => {
-          let data = res.data;
-          assert.notEqual(data, 0);
 
           done();
         });
     });
 
-    it("Should return null of wrong queries", done => {
-      //Make is a wrong query
-      requester
-        .get("/car?make=Toyota")
-        .send()
-        .end((err, res) => {
-          expect(res.body.data.length).equal(0);
-
-          done();
-        });
-    });
-
-    it("Should filter by either manufacturer, model or year if car exists", done => {
-      requester
-        .get("/car?manufacturer=Benz")
-        .send()
-        .end((err, res) => {
-          let data = res.body.data;
-          //console.log(data);
-          assert.notEqual(data.length, 0);
-
-          done();
-        });
-    });
+    /*** 401 Error */
     it("Should update Car price Successfully", done => {
       let price = {
         price: 12000

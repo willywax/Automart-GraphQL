@@ -6,7 +6,7 @@ const flagController = require("../controllers/flags");
 
 const auth = require("../middlewares/authentication");
 
-router.post("/", auth, flagController.flagCar);
-router.get("/", auth, flagController.getFlags);
+router.post("/", flagController.flagCar);
+router.get("/", flagController.getFlags);
 
 module.exports = router;

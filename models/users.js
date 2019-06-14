@@ -32,7 +32,7 @@ class User {
   }
 
   static logInUser(authenticatingUser) {
-    const user = this.findUser(authenticatingUser);
+    const user = this.findUserByEmail(authenticatingUser.email);
 
     const response = {
       authenticated: false,
@@ -73,15 +73,6 @@ class User {
 
   static getUsers() {
     return userData;
-  }
-
-  static findUser(user) {
-    for (let i = 0; i < userData.length; i++) {
-      if (userData[i].email === user.email) {
-        return userData[i];
-      }
-    }
-    return null;
   }
 
   static findUserByEmail(email) {

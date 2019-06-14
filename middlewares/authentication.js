@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
     if (userId && userId !== null) {
       next();
     } else {
-      res.status(401).json({
+      res.status(405).json({
         error: "Not Authorized. Invalid or expired Token"
       });
     }
