@@ -13,6 +13,8 @@ Auto Mart is an online marketplace for automobiles of diverse makes, model or bo
 Auto Mart, users can sell their cars or buy from trusted dealerships or private sellers
 
 ---
+## Project Planning and Stories 
+    The project and user features where created using a tool called Pivotal Tracker and the dashboard can be accessed via [Automart Pivotal Tracker](https://www.pivotaltracker.com/n/projects/2346911)
 ## Requirements
 
 For development, you will only need Node.js and a node global package, npm, installed in your environement
@@ -54,17 +56,28 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
     $ npm install --save
 
 ## Intergration and Configuration
-    The Application has no special configuration needed.
-    App has been intergrated with 
-    * [Travis]() For project build 
-    * [Coveralls]() For Test Coverage 
-    * [CodeClimate]() To review Code Quality
+The Application has no special configuration needed. App has been intergrated with 
+
+* [Travis](https://travis-ci.org/) For project build 
+* [Coveralls](https://coveralls.io/) For Test Coverage 
+* [CodeClimate](https://codeclimate.com/) To review Code Quality
+* [Pivotal Tracker](https://www.pivotaltracker.com/) For Project Planning
+
 
 ## Running the project
     `nodemon index.js`  or `npm start `
 
 ## Running the Tests   
     `npm run test`  or  `npm run coverage`  to get Coverage report 
+
+## Hosting of API End Points
+The API Endpoints have been successfully hosted on Heroku and can be accessed 
+using the link below. [Automart API](https://willywax-automart-api.herokuapp.com/)
+
+## Detailed Documentation 
+The detailed documentation showing every route, input parameters and resulted output
+has been hosted on PostMan API Documenter. And can be accessed using 
+[Automart-API Documentation](https://documenter.getpostman.com/view/7765769/S1Zw6pkv?version=latest#09889aab-f24f-4923-b0ac-c96bece21b9c)
 
 ## Endpoints to be Done 
 
@@ -88,7 +101,7 @@ Optional Features
 - [ ] User can ​ flag/report​ a posted AD as fraudulent.
 - [x] User can view all unsold cards of a specific make (manufacturer)
 
-##Detailed API End Points 
+## Detailed API End Points 
 Detailed Endpoints can are hosted in POST MAN and can be accessed via 
 [PostMan AutoMart-API](https://documenter.getpostman.com/view/7765769/S1Zw6pkv?version=latest)
 
