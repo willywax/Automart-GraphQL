@@ -53,6 +53,23 @@ exports.getCar = (req, res, next) => {
   }
 };
 
+exports.getUserCars = (req, res, next) => {
+  if (req.body.token.role || req.body.token.userId === req.params.userId) {
+    const cars = Car.findByUser(req.params.userId);
+
+    const data = {
+      status: 200,
+      data: cars
+    };
+
+    res.status(200).json(data);
+  } else {
+    res.status(401).json({
+      error: "Not Authorised"
+    });
+  }
+};
+
 exports.updateCar = (req, res, next) => {
   const car = Car.findById(req.params.id);
 
