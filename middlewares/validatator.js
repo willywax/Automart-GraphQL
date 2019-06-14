@@ -20,9 +20,6 @@ exports.checks = {
       .trim(" ")
       .isLength({ min: 1 })
       .withMessage("lastName is a required Field"),
-    check("isAdmin")
-      .isBoolean()
-      .withMessage("isAdmin is a required field with boolean value"),
     check("email").custom(value => {
       let result = User.findUserByEmail(value);
       if (result !== null) {
@@ -41,17 +38,6 @@ exports.checks = {
       .withMessage("password is field is required")
   ],
   postCarCheck: [
-    check("owner")
-      .trim(" ")
-      .escape()
-      .isString()
-      .custom(value => {
-        let result = User.findUserById(value);
-        if (result === null) {
-          return Promise.reject("Invalid Owner Id used");
-        }
-        return true;
-      }),
     check("state")
       .isIn(["used", "new"])
       .withMessage("State needs to be [used, new] "),
@@ -68,20 +54,28 @@ exports.checks = {
       .isString()
       .escape()
       .trim(" ")
-      .withMessage("body_type is required")
-  ],
-  postOrderCheck: [
-    check("buyer")
+      .withMessage("body_type is required"),
+    check("price")
+      .isDecimal()
+      .escape()
+      .withMessage("price field is required"),
+    check("manufacturer")
+      .isString()
       .trim(" ")
       .escape()
-      .isString()
-      .custom(value => {
-        let result = User.findUserById(value);
-        if (result === null) {
-          return Promise.reject("Invalid Owner Id used");
-        }
-        return true;
-      }),
+      .withMessage("manufacturer field is required")
+  ],
+  patchCarCheckStatus: [
+    check("status")
+      .isIn(["available", "sold"])
+      .withMessage("Status needs to be [available, sold] ")
+  ],
+  patchCarCheckPrice: [
+    check("price")
+      .isDecimal()
+      .withMessage("price  field is required needs to be decimal")
+  ],
+  postOrderCheck: [
     check("car")
       .trim(" ")
       .isString()

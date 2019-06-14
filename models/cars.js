@@ -49,6 +49,16 @@ class Car {
     return result;
   }
 
+  static findByUser(userId) {
+    let results = [];
+    for (let i = 0; i < carData.length; i++) {
+      if (carData[i].owner === userId) {
+        results.push(carData[i]);
+      }
+    }
+    return results;
+  }
+
   static searchCar(queries) {
     const keys = Object.keys(queries);
     const cars = [];
@@ -89,7 +99,6 @@ class Car {
     for (let i = 0; i < carData.length; i++) {
       if (carData[i].id === car.id) {
         carData.splice(i, 1);
-        // carData[i] = car;
         result = car;
         break;
       }

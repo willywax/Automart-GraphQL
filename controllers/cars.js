@@ -1,8 +1,9 @@
 const Car = require("../models/cars");
 
 exports.saveCar = (req, res, next) => {
+  /*UserId from token is used to create the Car Ad*/
   const newCar = new Car(
-    req.body.owner,
+    req.body.token.userId,
     req.body.state,
     req.body.price,
     req.body.manufacturer,
@@ -52,6 +53,23 @@ exports.getCar = (req, res, next) => {
   }
 };
 
+exports.getUserCars = (req, res, next) => {
+  if (req.body.token.role || req.body.token.userId === req.params.userId) {
+    const cars = Car.findByUser(req.params.userId);
+
+    const data = {
+      status: 200,
+      data: cars
+    };
+
+    res.status(200).json(data);
+  } else {
+    res.status(401).json({
+      error: "Not Authorised"
+    });
+  }
+};
+
 exports.updateCar = (req, res, next) => {
   const car = Car.findById(req.params.id);
 
@@ -70,7 +88,9 @@ exports.updateCar = (req, res, next) => {
 
     res.status(200).json(data);
   } else {
-    res.status(404).json("Error Occured");
+    res.status(404).json({
+      error: "Car not Found. Invalid Car Id used"
+    });
   }
 };
 
@@ -78,14 +98,22 @@ exports.deleteCar = (req, res, next) => {
   const car = Car.findById(req.params.id);
 
   if (car !== null) {
-    const result = Car.deleteOne(car);
+    if (req.body.token.role || req.body.token.userId === car.owner) {
+      const result = Car.deleteOne(car);
 
-    const data = {
-      status: 200,
-      data: result
-    };
+      const data = {
+        status: 200,
+        data: result
+      };
 
-    res.status(200).json(data);
+      res.status(200).json(data);
+    } else {
+      res.status(401).json({
+        error: "Not Authorised to delete Car"
+      });
+    }
   }
-  res.status(404).json("Failed");
+  res.status(404).json({
+    error: "Car not Found"
+  });
 };

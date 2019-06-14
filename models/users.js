@@ -1,18 +1,18 @@
 const bcrypt = require("bcrypt");
 const uuid = require("uuid");
+const jwt = require("jsonwebtoken");
 
-// const static userData = [];
 const userData = [];
 
 class User {
-  constructor(firstName, lastName, password, email, address, isAdmin) {
+  constructor(firstName, lastName, password, email, address) {
     this.id = this.generateId();
     this.first_name = firstName;
     this.last_name = lastName;
     this.password = this.encrypt(password);
     this.email = email;
     this.address = address;
-    this.is_admin = isAdmin;
+    this.is_admin = false;
   }
 
   encrypt(value) {
@@ -32,7 +32,7 @@ class User {
   }
 
   static logInUser(authenticatingUser) {
-    const user = this.findUser(authenticatingUser);
+    const user = this.findUserByEmail(authenticatingUser.email);
 
     const response = {
       authenticated: false,
@@ -43,6 +43,18 @@ class User {
 
       if (result) {
         response.authenticated = true;
+
+        //Creating authentication and authorization Token
+        const token = jwt.sign(
+          { userId: user.id, role: user.is_admin },
+          "RANDOM_TOKEN",
+          {
+            expiresIn: "24h"
+          }
+        );
+
+        user.token = token;
+
         response.data = user;
       }
     } else {
@@ -61,15 +73,6 @@ class User {
 
   static getUsers() {
     return userData;
-  }
-
-  static findUser(user) {
-    for (let i = 0; i < userData.length; i++) {
-      if (userData[i].email === user.email) {
-        return userData[i];
-      }
-    }
-    return null;
   }
 
   static findUserByEmail(email) {

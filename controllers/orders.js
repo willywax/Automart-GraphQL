@@ -1,21 +1,39 @@
 const Order = require("../models/orders");
+const Car = require("../models/cars");
 
 exports.saveOrder = (req, res, next) => {
-  const newOrder = new Order(req.body.buyer, req.body.car, req.body.amount);
+  const buyer = req.body.token.userId;
 
-  Order.saveOrder(newOrder);
-  const order = Order.findById(newOrder.id);
+  const car = Car.findById(req.body.car);
 
-  const data = {
-    status: 201,
-    data: order
-  };
+  if (buyer !== car.owner) {
+    const newOrder = new Order(buyer, req.body.car, req.body.amount);
 
-  res.status(201).json(data);
+    Order.saveOrder(newOrder);
+    const order = Order.findById(newOrder.id);
+
+    const data = {
+      status: 201,
+      data: order
+    };
+
+    res.status(201).json(data);
+  } else {
+    res.status(404).json({
+      error: "Cannot create PO for your own Car Ad"
+    });
+  }
 };
 
 exports.getOrder = (req, res, next) => {
-  const orders = Order.getOrders();
+  let orders = [];
+
+  if (!req.body.token.role) {
+    /*Get Orders created buy the User*/
+    orders = Order.getOrdersByUser(req.body.token.userId);
+  } else {
+    orders = Order.getOrders();
+  }
 
   const data = {
     status: 200,
@@ -28,7 +46,12 @@ exports.getOrder = (req, res, next) => {
 exports.updatePrice = (req, res, next) => {
   const order = Order.findById(req.params.id);
 
-  if (order !== null && order.status === "pending") {
+  if (
+    (order !== null &&
+      order.status === "pending" &&
+      req.body.token.userId === order.buyer) ||
+    req.body.token.role
+  ) {
     order.price_offered = req.body.amount;
     const result = Order.updateOrder(order);
 
