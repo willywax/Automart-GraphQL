@@ -14,7 +14,8 @@ Auto Mart, users can sell their cars or buy from trusted dealerships or private 
 
 ---
 ## Project Planning and Stories 
-    The project and user features where created using a tool called Pivotal Tracker and the dashboard can be accessed via [Automart Pivotal Tracker](https://www.pivotaltracker.com/n/projects/2346911)
+The project and user features where created using a tool called Pivotal Tracker and the dashboard can be accessed via [Automart Pivotal Tracker](https://www.pivotaltracker.com/n/projects/2346911)
+
 ## Requirements
 
 For development, you will only need Node.js and a node global package, npm, installed in your environement
