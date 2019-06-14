@@ -184,7 +184,7 @@ describe("Model Tests", () => {
         .send()
         .end((err, res) => {
           let data = res.body.data;
-          //console.log(data);
+
           assert.notEqual(data.length, 0);
 
           done();
