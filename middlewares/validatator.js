@@ -67,15 +67,13 @@ exports.checks = {
   ],
   patchCarCheckStatus: [
     check("status")
-      .optional()
       .isIn(["available", "sold"])
       .withMessage("Status needs to be [available, sold] ")
   ],
   patchCarCheckPrice: [
     check("price")
-      .optional()
-      .isIn(["available", "sold"])
-      .withMessage("Status needs to be [available, sold] ")
+      .isDecimal()
+      .withMessage("price  field is required needs to be decimal")
   ],
   postOrderCheck: [
     check("car")
