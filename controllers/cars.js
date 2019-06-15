@@ -55,7 +55,9 @@ exports.getCar = (req, res, next) => {
 
 exports.getUserCars = (req, res, next) => {
   if (req.body.token.role || req.body.token.userId === req.params.userId) {
-    const cars = Car.findByUser(req.params.userId);
+    const cars = req.body.token.role
+      ? Car.getCars()
+      : Car.findByUser(req.params.userId);
 
     const data = {
       status: 200,

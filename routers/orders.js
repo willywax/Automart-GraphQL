@@ -15,7 +15,9 @@ router.post(
   validators.validationResults,
   orderController.saveOrder
 );
+
 router.get("/", auth, orderController.getOrder);
+
 router.patch(
   "/:id/price",
   auth,
@@ -23,6 +25,7 @@ router.patch(
   validators.validationResults,
   orderController.updatePrice
 );
+
 router.patch(
   "/:id/status",
   auth,

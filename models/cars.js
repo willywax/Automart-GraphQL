@@ -49,16 +49,6 @@ class Car {
     return result;
   }
 
-  static findByUser(userId) {
-    let results = [];
-    for (let i = 0; i < carData.length; i++) {
-      if (carData[i].owner === userId) {
-        results.push(carData[i]);
-      }
-    }
-    return results;
-  }
-
   static searchCar(queries) {
     const keys = Object.keys(queries);
     const cars = [];

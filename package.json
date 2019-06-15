@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "nyc mocha ./test/test.js --timeout 10000 --exit",
+    "test": "nyc mocha ./test/**/**.spec.js --timeout 10000 --exit",
     "coverage": "nyc --reporter=lcov  npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint '**/*.js'",
