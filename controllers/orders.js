@@ -46,28 +46,27 @@ exports.getOrder = (req, res, next) => {
 exports.updatePrice = (req, res, next) => {
   const order = Order.findById(req.params.id);
 
-  if (
-    (order !== null &&
-      order.status === "pending" &&
-      req.body.token.userId === order.buyer) ||
-    req.body.token.role
-  ) {
-    order.price_offered = req.body.amount;
-    const result = Order.updateOrder(order);
+  const data = {};
 
-    const data = {
-      status: 200,
-      data: result
-    };
+  if (order !== null) {
+    if (
+      (order.status === "pending" && req.body.token.userId === order.buyer) ||
+      req.body.token.role
+    ) {
+      order.price_offered = req.body.amount;
+      const result = Order.updateOrder(order);
 
-    res.status(200).json(data);
+      data.status = 200;
+      data.data = result;
+    } else {
+      data.status = 404;
+      data.error = "Order not found or is not pending";
+    }
   } else {
-    const data = {
-      status: 404,
-      error: "Order not found or is not pending"
-    };
-    res.status(404).json(data);
+    data.status = 404;
+    data.error = "Order not found or is not pending";
   }
+  res.status(data.status).json(data);
 };
 
 exports.updateStatus = (req, res, next) => {

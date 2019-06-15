@@ -2,83 +2,93 @@ const User = require("./users");
 const Car = require("./cars");
 const Order = require("./orders");
 
-const admin = new User(
-  "Admin",
-  "Admin",
-  "admin",
-  "admin@automart.com",
-  "144 Peter Road",
-  true
-);
-const seller = new User(
-  "Seller",
-  "Colgate",
-  "123123",
-  "seller@stations.com",
-  "144 Peter Road",
-  false
-);
+const admin = {
+  id: "123100100",
+  firstName: "Admin",
+  lastName: "Admin",
+  password: User.encrypt("admin"),
+  email: "admin@automart.com",
+  address: "Admin Address",
+  is_admin: true
+};
 
-const buyer = new User(
-  "Buyer",
-  "Zima",
-  "123123",
-  "buyer@stations.com",
-  "144 Peter Road",
-  false
-);
+const seller = {
+  id: "123100101",
+  firstName: "Seller",
+  lastName: "Seller",
+  password: User.encrypt("123123"),
+  email: "seller@automart.com",
+  is_admin: false
+};
 
-const car1 = new Car(seller.id, "used", 5000, "Benz", "C-Class", "car");
+const buyer = {
+  id: "123100102",
+  firstName: "Buyer",
+  lastName: "Buyer",
+  password: User.encrypt("123123"),
+  email: "buyer@automart.com",
+  is_admin: false
+};
 
-const car2 = new Car(seller.id, "new", 150000, "VW", "Amarok", "pick-up");
-const car3 = new Car(seller.id, "new", 165000, "BMW", "X6", "car");
+const car1 = {
+  id: "123200100",
+  owner: "123100101",
+  state: "new",
+  status: "available",
+  price: 15000,
+  manufacturer: "Benz",
+  model: "C-Class",
+  body_type: "car"
+};
+
+const car2 = {
+  id: "123200101",
+  owner: "123100101",
+  state: "used",
+  status: "used",
+  price: 25000,
+  manufacturer: "VW",
+  model: "Amarok",
+  body_type: "pick-up"
+};
+
+const car3 = {
+  id: "123200102",
+  owner: "123100101",
+  state: "used",
+  status: "available",
+  price: 35000,
+  manufacturer: "BMW",
+  model: "X-6",
+  body_type: "SUV"
+};
+
+const order1 = {
+  id: "123300100",
+  car: "123200102",
+  buyer: "123100102",
+  status: "pending",
+  price_offered: 40000
+};
 
 exports.populateData = () => {
-  //Creating a super User
-  admin.is_admin = true;
-
+  //Adding Users to UserCollection
   User.saveUser(admin);
   User.saveUser(buyer);
   User.saveUser(seller);
 
+  //Adding Cars to CarCollection
   Car.saveCar(car1);
   Car.saveCar(car2);
   Car.saveCar(car3);
 
-  const order = new Order(buyer.id, car1.id, 15000);
-
-  Order.saveOrder(order);
+  //Adding Order to Collection
+  Order.saveOrder(order1);
 };
 
-/** Methods For Test Sets */
+/** Methods For Exposing the created data */
 exports.data = {
-  users: {
-    admintoken: "",
-    sellerToken: "",
-    buyerToken: "",
-    cars: [car1, car2, car3]
-  }
+  users: [admin, seller, buyer],
+  cars: [car1, car2, car3],
+  orders: [order1]
 };
-
-exports.createToken = () => {
-  let admin = getToken({
-    email: "admin@automart.com",
-    password: "admin"
-  });
-
-  let seller = getToken({
-    email: "seller@stations.com",
-    password: "123123"
-  });
-
-  this.data.users.admintoken = admin;
-
-  this.data.users.sellerToken = seller;
-
-  //return token;
-};
-function getToken(user) {
-  let response = User.logInUser(user);
-
-  return response.data.token;
-}

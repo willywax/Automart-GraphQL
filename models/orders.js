@@ -7,7 +7,7 @@ const orderData = [];
 class Order {
   constructor(buyer, car, amount) {
     this.id = this.generateId();
-    this.car_id = car;
+    this.car = car;
     this.created_on = new Date();
     this.buyer = buyer;
     this.status = "pending"; // Default Status when Order is made
@@ -23,7 +23,7 @@ class Order {
       }
     }
     if (result !== null) {
-      const car = Car.findById(result.car_id);
+      const car = Car.findById(result.car);
       result.price = car !== null ? car.price : "None";
     }
     return result;

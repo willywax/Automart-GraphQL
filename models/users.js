@@ -9,13 +9,13 @@ class User {
     this.id = this.generateId();
     this.first_name = firstName;
     this.last_name = lastName;
-    this.password = this.encrypt(password);
+    this.password = User.encrypt(password);
     this.email = email;
     this.address = address;
     this.is_admin = false;
   }
 
-  encrypt(value) {
+  static encrypt(value) {
     const hash = bcrypt.hashSync(value, 10);
     return hash;
   }
