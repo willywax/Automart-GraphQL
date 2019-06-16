@@ -55,20 +55,13 @@ class Car {
     for (let i = 0; i < carData.length; i++) {
       let found = false;
       for (const key of keys) {
-        if (key === "min_price") {
-          if (carData[i].price >= queries.min_price) {
-            found = true;
-          } else {
-            found = false;
-            break;
-          }
-        } else if (key === "max_price") {
-          if (carData[i].price <= queries.max_price) {
-            found = true;
-          } else {
-            found = false;
-            break;
-          }
+        if (key === "min_price" && carData[i].price >= queries.min_price) {
+          found = true;
+        } else if (
+          key === "max_price" &&
+          carData[i].price <= queries.max_price
+        ) {
+          found = true;
         } else if (carData[i][key] === queries[key]) {
           found = true;
         } else {
