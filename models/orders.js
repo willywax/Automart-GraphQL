@@ -22,10 +22,6 @@ class Order {
         break;
       }
     }
-    if (result !== null) {
-      const car = Car.findById(result.car);
-      result.price = car !== null ? car.price : "None";
-    }
     return result;
   }
 
