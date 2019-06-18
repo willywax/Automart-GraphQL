@@ -1,35 +1,22 @@
-const jwt = require("jsonwebtoken");
 const User = require("../models/users");
-
-const { validationResult } = require("express-validator/check");
+const Response = require("../utils/response");
 
 exports.signUp = (req, res, next) => {
-  const newUser = new User(
-    req.body.firstName,
-    req.body.lastName,
-    req.body.password,
-    req.body.email,
-    req.body.address,
-    req.body.isAdmin
-  );
+  const newUser = new User(req.body);
 
-  const user = User.saveUser(newUser);
-
-  const token = jwt.sign(
-    { userId: user.id, role: user.is_admin },
-    "RANDOM_TOKEN",
-    {
-      expiresIn: "24h"
+  User.saveUser(newUser, (err, user) => {
+    if (err) {
+      res
+        .status(404)
+        .json(new Response(404, null, err, "Sign Up Failed").response());
+    } else {
+      res
+        .status(201)
+        .json(
+          new Response(201, user, null, "Registered Succcessfully").response()
+        );
     }
-  );
-
-  user.token = token;
-
-  const data = {
-    status: 201,
-    data: user
-  };
-  res.status(201).json(data);
+  });
 };
 
 exports.login = (req, res, next) => {

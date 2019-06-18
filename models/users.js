@@ -1,34 +1,15 @@
-const bcrypt = require("bcrypt");
-const uuid = require("uuid");
-const jwt = require("jsonwebtoken");
-
-const userData = [];
+const helper = require("../utils/helper");
+const client = require("../services/connection");
 
 class User {
-  constructor(firstName, lastName, password, email, address) {
-    this.id = this.generateId();
-    this.first_name = firstName;
-    this.last_name = lastName;
-    this.password = User.encrypt(password);
-    this.email = email;
-    this.address = address;
+  constructor(user) {
+    this.id = helper.generateId();
+    this.first_name = user.firstName;
+    this.last_name = user.lastName;
+    this.password = helper.encrypt(user.password);
+    this.email = user.email;
+    this.address = user.address;
     this.is_admin = false;
-  }
-
-  static encrypt(value) {
-    const hash = bcrypt.hashSync(value, 10);
-    return hash;
-  }
-
-  generateId() {
-    return uuid.v1();
-  }
-
-  static decrypt(hash, value) {
-    if (bcrypt.compareSync(value, hash)) {
-      return true;
-    }
-    return false;
   }
 
   static logInUser(authenticatingUser) {
@@ -64,33 +45,41 @@ class User {
     return response;
   }
 
-  static saveUser(user) {
-    userData.push(user);
+  static saveUser(user, done) {
+    const result = this.findUserByEmail(user.email);
+    result.then(emails => {
+      if (emails.rows.length === 0) {
+        const query =
+          "INSERT INTO users(id, first_name, last_name, email, password, address, is_admin)VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *";
+        const values = [
+          user.id,
+          user.first_name,
+          user.last_name,
+          user.email,
+          user.password,
+          user.address,
+          user.is_admin
+        ];
 
-    // Return last saved Record
-    return userData[userData.length - 1];
-  }
-
-  static getUsers() {
-    return userData;
-  }
-
-  static findUserByEmail(email) {
-    for (let i = 0; i < userData.length; i++) {
-      if (userData[i].email === email) {
-        return userData[i];
+        client.query(query, values, (err, res) => {
+          if (err) {
+            done(err, null);
+          } else {
+            done(null, res.rows[0]);
+          }
+        });
+      } else {
+        done("Duplicate Email", null);
       }
-    }
-    return null;
+    });
   }
 
-  static findUserById(user_id) {
-    for (let i = 0; i < userData.length; i++) {
-      if (userData[i].id === user_id) {
-        return userData[i];
-      }
-    }
-    return null;
+  static async findUserByEmail(email) {
+    const result = await client
+      .query(`SELECT * FROM users WHERE email='${email}'`)
+      .catch(error => console.log(error));
+
+    return result;
   }
 }
 
