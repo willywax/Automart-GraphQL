@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "dev": "nodemon index.js",
     "test": "nyc mocha ./test/**/**.spec.js --timeout 10000 --exit",
+    "createTables": "node ./services/createTables.js",
+    "drop": "node ./services/dropSchema.js && npm run schema && npm run createTables",
+    "schema": "node ./services/createSchema.js",
     "coverage": "nyc --reporter=lcov  npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint '**/*.js'",
@@ -33,11 +36,13 @@
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "dotenv": "^8.0.0",
     "express": "^4.17.0",
     "express-validator": "^5.3.1",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
+    "pg": "^7.11.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

@@ -5,9 +5,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/361a54a98974e89478c0/test_coverage)](https://codeclimate.com/github/willywax/Automart-Api/test_coverage)
 
 
-
-# Project Title
-Automart 
+# Automart 
 
 Auto Mart is an online marketplace for automobiles of diverse makes, model or body type. With
 Auto Mart, users can sell their cars or buy from trusted dealerships or private sellers
@@ -63,6 +61,8 @@ The Application has no special configuration needed. App has been intergrated wi
 * [Coveralls](https://coveralls.io/) For Test Coverage 
 * [CodeClimate](https://codeclimate.com/) To review Code Quality
 * [Pivotal Tracker](https://www.pivotaltracker.com/) For Project Planning
+
+
 
 
 ## Running the project

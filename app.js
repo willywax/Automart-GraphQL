@@ -3,14 +3,10 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
-const User = require("./models/users");
-
 const userRouter = require("./routers/users");
 const carRouter = require("./routers/cars");
 const orderRouter = require("./routers/orders");
 const flagRouter = require("./routers/flags");
-
-const data = require("./models/testData");
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -30,8 +26,6 @@ app.use(express.static(`${__dirname}/UI`));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-data.populateData();
 
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/car", carRouter);
