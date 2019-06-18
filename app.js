@@ -31,8 +31,6 @@ app.use(express.static(`${__dirname}/UI`));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-data.populateData();
-
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/car", carRouter);
 app.use("/api/v1/order", orderRouter);
