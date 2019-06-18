@@ -1,7 +1,5 @@
 const uuid = require("uuid");
 
-const Car = require("./cars");
-
 const orderData = [];
 
 class Order {

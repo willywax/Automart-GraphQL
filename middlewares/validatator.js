@@ -19,14 +19,7 @@ exports.checks = {
     check("lastName")
       .trim(" ")
       .isLength({ min: 1 })
-      .withMessage("lastName is a required Field"),
-    check("email").custom(value => {
-      let result = User.findUserByEmail(value);
-      if (result !== null) {
-        return Promise.reject("E-mail already in use");
-      }
-      return true;
-    })
+      .withMessage("lastName is a required Field")
   ],
   singInCheck: [
     check("email")

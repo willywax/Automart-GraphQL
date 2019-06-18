@@ -1,5 +1,4 @@
 const uuid = require("uuid");
-
 const flagData = [];
 
 class Flag {

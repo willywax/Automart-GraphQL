@@ -1,8 +1,6 @@
 const helper = require("../utils/helper");
 const client = require("../services/connection");
 
-const userData = [];
-
 class User {
   constructor(user) {
     this.id = helper.generateId();
@@ -48,35 +46,40 @@ class User {
   }
 
   static saveUser(user, done) {
-    const query =
-      "INSERT INTO users(id, first_name, last_name, email, password, address, is_admin)VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *";
+    const result = this.findUserByEmail(user.email);
+    result.then(emails => {
+      if (emails.rows.length === 0) {
+        const query =
+          "INSERT INTO users(id, first_name, last_name, email, password, address, is_admin)VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *";
+        const values = [
+          user.id,
+          user.first_name,
+          user.last_name,
+          user.email,
+          user.password,
+          user.address,
+          user.is_admin
+        ];
 
-    const values = [
-      user.id,
-      user.first_name,
-      user.last_name,
-      user.email,
-      user.password,
-      user.address,
-      user.is_admin
-    ];
-
-    client.query(query, values, (err, res) => {
-      if (err) {
-        done(err, null);
+        client.query(query, values, (err, res) => {
+          if (err) {
+            done(err, null);
+          } else {
+            done(null, res.rows[0]);
+          }
+        });
       } else {
-        done(null, res.rows[0]);
+        done("Duplicate Email", null);
       }
     });
   }
 
-  static findUserByEmail(email) {
-    for (let i = 0; i < userData.length; i++) {
-      if (userData[i].email === email) {
-        return userData[i];
-      }
-    }
-    return null;
+  static async findUserByEmail(email) {
+    const result = await client
+      .query(`SELECT * FROM users WHERE email='${email}'`)
+      .catch(error => console.log(error));
+
+    return result;
   }
 }
 
