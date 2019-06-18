@@ -10,6 +10,8 @@ const index = require("../../index");
 const app = require("../../app");
 
 describe("Testing Cars Enpoints", () => {
+  after("Deleting User", () => {});
+
   it("Register User User", done => {
     let userDetails = {
       email: "test@automart.com",
@@ -24,6 +26,7 @@ describe("Testing Cars Enpoints", () => {
       .end((err, res) => {
         expect(res).to.have.status(201);
 
+        let userId = res.body.id;
         done();
       });
   });
@@ -40,37 +43,7 @@ describe("Testing Cars Enpoints", () => {
       .post("/auth/signup")
       .send(userDetails)
       .end((err, res) => {
-        expect(res).to.have.status(422);
-
-        done();
-      });
-  });
-
-  it("Logins User", done => {
-    let userDetails = {
-      email: "admin@automart.com",
-      password: "admin"
-    };
-    requester
-      .post("/auth/signin")
-      .send(userDetails)
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-
-        done();
-      });
-  });
-
-  it("Fails to Authenticate User with incorrect credentials", done => {
-    let userDetails = {
-      email: "admin@automart.com",
-      password: "cool"
-    };
-    requester
-      .post("/auth/signin")
-      .send(userDetails)
-      .end((err, res) => {
-        expect(res).to.have.status(401);
+        expect(res).to.have.status(404);
 
         done();
       });

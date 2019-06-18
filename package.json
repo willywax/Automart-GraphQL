@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "test": "nyc mocha ./test/**/**.spec.js --timeout 10000 --exit",
+    "test": "npm run drop && nyc mocha ./test/**/**.spec.js --timeout 10000 --exit",
     "createTables": "node ./services/createTables.js",
     "drop": "node ./services/dropSchema.js && npm run schema && npm run createTables",
     "schema": "node ./services/createSchema.js",
