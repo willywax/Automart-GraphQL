@@ -3,14 +3,10 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
-const User = require("./models/users");
-
 const userRouter = require("./routers/users");
 const carRouter = require("./routers/cars");
 const orderRouter = require("./routers/orders");
 const flagRouter = require("./routers/flags");
-
-const data = require("./models/testData");
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
