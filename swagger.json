@@ -4,7 +4,7 @@
     "description": "This is a sample server AutomartAPI. Showing the AutoMartAPI backend APIS",
     "version": "1.0.0",
     "title": "AutoMart-APi",
-    "termsOfService": "http://swagger.io/terms/",
+    "termsOfService": "localhost:3000",
     "contact": {
       "email": "williamtrans2011@gmail.com"
     },
@@ -13,7 +13,7 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host": "petstore.swagger.io",
+  "host": "localhost:3000",
   "basePath": "/api/v1",
   "tags": [
     {
@@ -65,15 +65,7 @@
           "422": {
             "description": "Invalid input"
           }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ]
+        }
       }
     },
     "/auth/signin": {
@@ -83,7 +75,7 @@
         ],
         "summary": "Add a new user",
         "description": "End point for creating a new user",
-        "operationId": "addUser",
+        "operationId": "registerUser",
         "consumes": [
           "application/json",
           "application/xml"
@@ -97,9 +89,8 @@
             "in": "body",
             "name": "body",
             "description": "User object that needs to be added to the store",
-            "required": true,
             "schema": {
-              "$ref": "#/definitions/SignIn"
+              "$ref": "#/definitions/User"
             }
           }
         ],
@@ -117,6 +108,47 @@
           }
         ]
       }
+    },
+    "/car": {
+      "post": {
+        "tags": [
+          "car"
+        ],
+        "summary": "Adds a new Car",
+        "description": "End point for creating a new Car",
+        "operationId": "addCar",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User object that needs to be added to the store",
+            "schema": {
+              "$ref": "#/definitions/Car"
+            }
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:cars",
+              "read:cars"
+            ]
+          }
+        ]
+      }
     }
   },
   "securityDefinitions": {
@@ -125,13 +157,13 @@
       "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
       "flow": "implicit",
       "scopes": {
-        "write:pets": "modify pets in your account",
-        "read:pets": "read your pets"
+        "write:cars": "modify cars in your account",
+        "read:cars": "read your cars"
       }
     },
     "api_key": {
       "type": "apiKey",
-      "name": "api_key",
+      "name": "authorization",
       "in": "header"
     }
   },
@@ -139,13 +171,6 @@
     "User": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "username": {
-          "type": "string"
-        },
         "firstName": {
           "type": "string"
         },
@@ -158,48 +183,24 @@
         "password": {
           "type": "string"
         },
-        "phone": {
+        "address": {
           "type": "string"
-        },
-        "userStatus": {
-          "type": "integer",
-          "format": "int32",
-          "description": "User Status"
         }
       },
       "xml": {
         "name": "User"
       }
     },
-    "SignIn": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-      "xml": {
-        "name": "User"
-      }
-    }
-  },
     "Car": {
       "type": "object",
       "required": [
-        "owner",
         "model",
-        "manufacturer"
+        "manufacturer",
+        "price",
+        "body_type",
+        "state"
       ],
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "owner": {
-          "type": "integer"
-        },
         "model": {
           "type": "string",
           "example": "x-6"
@@ -207,6 +208,13 @@
         "manufacturer": {
           "type": "string",
           "example": "benz"
+        },
+        "price": {
+          "type": "number"
+        },
+        "body_type": {
+          "type": "string",
+          "example": "[car, suv, pick-up]"
         },
         "state": {
           "type": "string",
@@ -218,6 +226,7 @@
         },
         "status": {
           "type": "string",
+          "default": "available",
           "description": "pet status in the store",
           "enum": [
             "available",

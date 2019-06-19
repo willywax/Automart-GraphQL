@@ -9,7 +9,7 @@ const requester = chai.request.agent(url);
 const index = require("../../index");
 const app = require("../../app");
 
-describe("Testing Cars Enpoints", () => {
+describe("Testing User Enpoints", () => {
   after("Deleting User", () => {});
 
   it("Register User User", done => {
