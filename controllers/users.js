@@ -25,20 +25,17 @@ exports.login = (req, res, next) => {
     password: req.body.password
   };
 
-  const response = User.logInUser(user);
-
-  if (response.authenticated) {
-    const data = {
-      status: 200,
-      data: response.data
-    };
-
-    res.status(200).json(data);
-  } else {
-    const data = {
-      status: 401,
-      error: "Incorrect Credential"
-    };
-    res.status(401).json(data);
-  }
+  User.logInUser(user, (err, user) => {
+    if (err) {
+      res
+        .status(404)
+        .json(new Response(404, null, err, "Incorrect Details").response());
+    } else {
+      res
+        .status(201)
+        .json(
+          new Response(201, user, null, "Signed In Succcessfully").response()
+        );
+    }
+  });
 };
