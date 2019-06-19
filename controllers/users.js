@@ -32,9 +32,9 @@ exports.login = (req, res, next) => {
         .json(new Response(404, null, err, "Incorrect Details").response());
     } else {
       res
-        .status(201)
+        .status(200)
         .json(
-          new Response(201, user, null, "Signed In Succcessfully").response()
+          new Response(200, user, null, "Signed In Succcessfully").response()
         );
     }
   });
