@@ -74,13 +74,6 @@ exports.checks = {
       .isString()
       .escape()
       .withMessage("Car is a required Field"),
-    check("car").custom(value => {
-      let result = Car.findById(value);
-      if (result === null) {
-        return Promise.reject("Invalid Car Id used");
-      }
-      return true;
-    }),
     check("amount")
       .isDecimal()
       .withMessage("amount is a required Field")

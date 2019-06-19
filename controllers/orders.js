@@ -1,28 +1,30 @@
 const Order = require("../models/orders");
-const Car = require("../models/cars");
+const Response = require("../utils/response");
 
 exports.saveOrder = (req, res, next) => {
-  const buyer = req.body.token.userId;
+  req.body.buyer = req.body.token.userId;
+  const newOrder = new Order(req.body);
 
-  const car = Car.findById(req.body.car);
-
-  if (buyer !== car.owner) {
-    const newOrder = new Order(buyer, req.body.car, req.body.amount);
-
-    Order.saveOrder(newOrder);
-    const order = Order.findById(newOrder.id);
-
-    const data = {
-      status: 201,
-      data: order
-    };
-
-    res.status(201).json(data);
-  } else {
-    res.status(404).json({
-      error: "Cannot create PO for your own Car Ad"
-    });
-  }
+  Order.saveOrder(newOrder, (err, order) => {
+    if (err) {
+      res
+        .status(404)
+        .json(
+          new Response(404, null, err, "Order failed to create").response()
+        );
+    } else {
+      res
+        .status(201)
+        .json(
+          new Response(
+            201,
+            order,
+            null,
+            "Order created successfully"
+          ).response()
+        );
+    }
+  });
 };
 
 exports.getOrder = (req, res, next) => {
