@@ -45,9 +45,6 @@ describe("Testing Cars Enpoints", () => {
       .send(userDetails)
       .end((err, res) => {
         token = res.body.data.token;
-
-        console.log("User Signed IN: " + token);
-
         done();
       });
   });
@@ -72,7 +69,6 @@ describe("Testing Cars Enpoints", () => {
       });
   });
   it("Creates car as authenticated User", done => {
-    console.log("TOKEN " + token);
     let carObject = {
       state: "used",
       price: 56000,
@@ -96,7 +92,6 @@ describe("Testing Cars Enpoints", () => {
   });
 
   it("Fails to create car if any of the fields are missing", done => {
-    console.log("TOKEN " + token);
     let carObject = {
       state: "used",
       price: 56000,
