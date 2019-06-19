@@ -1,24 +1,23 @@
 const Car = require("../models/cars");
+const Response = require("../utils/response");
 
 exports.saveCar = (req, res, next) => {
   /*UserId from token is used to create the Car Ad*/
-  const newCar = new Car(
-    req.body.token.userId,
-    req.body.state,
-    req.body.price,
-    req.body.manufacturer,
-    req.body.model,
-    req.body.body_type
-  );
+  const newCar = new Car(req.body);
 
-  const car = Car.saveCar(newCar);
-
-  const data = {
-    status: 201,
-    data: car
-  };
-
-  res.status(201).json(data);
+  Car.saveCar(newCar, (err, car) => {
+    if (err) {
+      res
+        .status(404)
+        .json(new Response(404, null, err, "Car failed to create").response());
+    } else {
+      res
+        .status(201)
+        .json(
+          new Response(201, car, null, "Car created successfully").response()
+        );
+    }
+  });
 };
 
 exports.getCars = (req, res, next) => {

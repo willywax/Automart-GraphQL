@@ -36,5 +36,10 @@ exports.generateToken = user => {
 
   return token;
 };
-
 /** Saving */
+
+exports.decodeToken = token => {
+  const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
+
+  return decodeToken;
+};
