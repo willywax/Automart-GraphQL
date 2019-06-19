@@ -40,8 +40,19 @@ class Car {
     });
   }
 
-  static getCars() {
-    return carData;
+  static searchCars(queries, done) {
+    let query = "SELECT * FROM cars";
+
+    client.query(query, (err, res) => {
+      if (err) {
+        done(err, null);
+      } else {
+        let cars = Object.keys(queries).length
+          ? this.filterCars(queries, res.rows)
+          : res.rows;
+        done(null, cars);
+      }
+    });
   }
 
   static async findById(car_id) {
@@ -64,17 +75,17 @@ class Car {
     return result;
   }
 
-  static searchCar(queries) {
+  static filterCars(queries, carData) {
     const keys = Object.keys(queries);
     const cars = [];
     for (let i = 0; i < carData.length; i++) {
       let found = false;
       for (const key of keys) {
-        if (key === "min_price" && carData[i].price >= queries.min_price) {
+        if (key === "min_price" && queries.min_price <= carData[i].price) {
           found = true;
         } else if (
           key === "max_price" &&
-          carData[i].price <= queries.max_price
+          queries.max_price >= carData[i].price
         ) {
           found = true;
         } else if (carData[i][key] === queries[key]) {

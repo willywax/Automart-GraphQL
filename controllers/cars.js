@@ -14,27 +14,33 @@ exports.saveCar = (req, res, next) => {
       res
         .status(201)
         .json(
-          new Response(201, car, null, "Car created successfully").response()
+          new Response(201, car, null, "Car created Successfully").response()
         );
     }
   });
 };
 
 exports.getCars = (req, res, next) => {
-  let cars = Car.getCars();
-  const queries = req.query;
+  let queries = req.query;
 
-  const data = {
-    status: 200,
-    data: cars
-  };
-
-  if (Object.keys(queries).length) {
-    cars = Car.searchCar(queries);
-    data.data = cars;
-    res.status(200).json(data);
-  }
-  res.status(200).json(data);
+  Car.searchCars(queries, (err, cars) => {
+    if (err) {
+      res
+        .status(404)
+        .json(new Response(404, null, err, "Failed to get Cars").response());
+    } else {
+      let response =
+        cars.length === 0
+          ? new Response(200, cars, null, "No Car Found").response()
+          : new Response(
+              200,
+              cars,
+              null,
+              "Car Returned Successfully"
+            ).response();
+      res.status(200).json(response);
+    }
+  });
 };
 
 exports.getCar = (req, res, next) => {
