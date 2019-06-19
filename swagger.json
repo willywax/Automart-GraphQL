@@ -98,15 +98,7 @@
           "422": {
             "description": "Invalid input"
           }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ]
+        }
       }
     },
     "/car": {
@@ -148,6 +140,48 @@
             ]
           }
         ]
+      }
+    },
+    "/order": {
+      "post": {
+        "tags": [
+          "order"
+        ],
+        "summary": "Adds a new Purchase Order",
+        "description": "End point for creating a new PO",
+        "operationId": "addPo",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Order Object that needs to be created",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Un Authorized"
+          },
+          "404": {
+            "description": "Invalid Car Id"
+          },
+          "201": {
+            "description": "Created"
+          }
+        }
       }
     }
   },
@@ -239,19 +273,10 @@
     "Order": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "carId": {
-          "type": "string"
-        },
-        "buyerId": {
+        "car": {
           "type": "string"
         },
         "amount": {
-          "type": "number"
-        },
-        "status": {
           "type": "string",
           "description": "Order Status",
           "enum": [

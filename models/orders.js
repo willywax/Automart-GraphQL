@@ -27,28 +27,30 @@ class Order {
 
     cars
       .then(car => {
-        if (car.rows.length === 0) done("Incorrect Car", null);
-
-        if (car.rows[0].owner === order.buyer) {
-          done("Buyer cant buy own car", null);
+        if (car.rows.length === 0) {
+          done("Incorrect Car", null);
         } else {
-          const query =
-            "INSERT INTO orders(id, buyer, car, status, price_offered)VALUES($1,$2,$3,$4,$5) RETURNING *";
-          const values = [
-            order.id,
-            order.buyer,
-            order.car,
-            order.status,
-            order.price_offered
-          ];
+          if (car.rows[0].owner === order.buyer) {
+            done("Buyer cant buy own car", null);
+          } else {
+            const query =
+              "INSERT INTO orders(id, buyer, car, status, price_offered)VALUES($1,$2,$3,$4,$5) RETURNING *";
+            const values = [
+              order.id,
+              order.buyer,
+              order.car,
+              order.status,
+              order.price_offered
+            ];
 
-          client.query(query, values, (err, res) => {
-            if (err) {
-              done(err, null);
-            } else {
-              done(null, res.rows);
-            }
-          });
+            client.query(query, values, (err, res) => {
+              if (err) {
+                done(err, null);
+              } else {
+                done(null, res.rows);
+              }
+            });
+          }
         }
       })
       .catch(err => {
