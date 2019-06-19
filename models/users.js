@@ -12,41 +12,37 @@ class User {
     this.is_admin = false;
   }
 
-  static logInUser(authenticatingUser) {
-    const user = this.findUserByEmail(authenticatingUser.email);
+  static logInUser(authenticatingUser, done) {
+    const result = this.findUserByEmail(authenticatingUser.email);
 
-    const response = {
-      authenticated: false,
-      data: null
-    };
-    if (user !== null) {
-      const result = this.decrypt(user.password, authenticatingUser.password);
+    result
+      .then(emails => {
+        if (emails.rows.length !== 0) {
+          let user = emails.rows[0];
 
-      if (result) {
-        response.authenticated = true;
+          const authenticate = helper.decrypt(
+            user.password,
+            authenticatingUser.password
+          );
 
-        //Creating authentication and authorization Token
-        const token = jwt.sign(
-          { userId: user.id, role: user.is_admin },
-          "RANDOM_TOKEN",
-          {
-            expiresIn: "24h"
+          if (authenticate) {
+            user.token = helper.generateToken(user);
+            done(null, user);
+          } else {
+            done("Incorrect Password", null);
           }
-        );
-
-        user.token = token;
-
-        response.data = user;
-      }
-    } else {
-      response.authenticated = false;
-      response.data = "Incorrect Username or Password";
-    }
-    return response;
+        } else {
+          done("Invalid Email", null);
+        }
+      })
+      .catch(err => {
+        done("Something went wrong", null);
+      });
   }
 
   static saveUser(user, done) {
     const result = this.findUserByEmail(user.email);
+
     result.then(emails => {
       if (emails.rows.length === 0) {
         const query =
