@@ -48,4 +48,49 @@ describe("Testing Cars Enpoints", () => {
         done();
       });
   });
+
+  it("Signs In Successfully", done => {
+    let userDetails = {
+      email: "test@automart.com",
+      password: "123123"
+    };
+    requester
+      .post("/auth/signin")
+      .send(userDetails)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+
+        done();
+      });
+  });
+
+  it("Fails to Sign in valid email", done => {
+    let userDetails = {
+      email: "tes@automart.com",
+      password: "123123"
+    };
+    requester
+      .post("/auth/signin")
+      .send(userDetails)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+
+        done();
+      });
+  });
+
+  it("Fails to Signin Invalid password", done => {
+    let userDetails = {
+      email: "test@automart.com",
+      password: "12312"
+    };
+    requester
+      .post("/auth/signin")
+      .send(userDetails)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+
+        done();
+      });
+  });
 });
