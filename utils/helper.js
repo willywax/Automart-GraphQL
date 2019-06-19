@@ -1,7 +1,7 @@
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const Response = require("./response");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -42,4 +42,14 @@ exports.decodeToken = token => {
   const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
 
   return decodeToken;
+};
+
+/**Handles Error Message if incorrect route or method */
+exports.getError = (req, res) => {
+  const url = req.method + " " + req.protocol + "://" + req.hostname + req.url;
+  res
+    .status(405)
+    .json(
+      new Response(405, url, null, "Incorrect method or Invalid path Found")
+    );
 };

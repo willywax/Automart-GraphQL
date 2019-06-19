@@ -11,6 +11,8 @@ const carRouter = require("./routers/cars");
 const orderRouter = require("./routers/orders");
 const flagRouter = require("./routers/flags");
 
+const helper = require("./utils/helper");
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -36,5 +38,7 @@ app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/car", carRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/flag", flagRouter);
+
+app.use("/", helper.getError);
 
 module.exports = app;
