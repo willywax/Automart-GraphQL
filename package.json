@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "test": "nyc mocha ./test/**/**.spec.js --timeout 10000 --exit",
+    "test": "npm run drop && nyc mocha ./test/**/**.js --timeout 10000 --exit",
     "createTables": "node ./services/createTables.js",
     "drop": "node ./services/dropSchema.js && npm run schema && npm run createTables",
     "schema": "node ./services/createSchema.js",
@@ -43,6 +43,8 @@
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
     "pg": "^7.11.0",
+    "swagger-ui": "^3.22.3",
+    "swagger-ui-express": "^4.0.6",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
