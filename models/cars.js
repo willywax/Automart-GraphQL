@@ -44,15 +44,12 @@ class Car {
     return carData;
   }
 
-  static findById(car) {
-    let result = null;
-    for (let i = 0; i < carData.length; i++) {
-      if (carData[i].id === car) {
-        result = carData[i];
-        break;
-      }
-    }
-    return result;
+  static async findById(car_id) {
+    let cars = await client
+      .query(`SELECT * FROM cars WHERE id='${car_id}'`)
+      .catch(error => console.log(error));
+
+    return cars;
   }
 
   static updateOne(car) {

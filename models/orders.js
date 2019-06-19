@@ -1,33 +1,59 @@
-const uuid = require("uuid");
+const helper = require("../utils/helper");
+const client = require("../services/connection");
+
+const Car = require("../models/cars");
 
 const orderData = [];
 
 class Order {
-  constructor(buyer, car, amount) {
-    this.id = this.generateId();
-    this.car = car;
-    this.created_on = new Date();
-    this.buyer = buyer;
+  constructor(order) {
+    this.id = helper.generateId();
+    this.car = order.car;
+    this.buyer = order.buyer;
     this.status = "pending"; // Default Status when Order is made
-    this.price_offered = amount;
+    this.price_offered = order.amount;
   }
 
-  static findById(order) {
-    let result = null;
-    for (let i = 0; i < orderData.length; i++) {
-      if (order === orderData[i].id) {
-        result = orderData[i];
-        break;
-      }
-    }
+  static async findById(order) {
+    const result = await client
+      .query(`SELECT * FROM orders WHERE id='${order}'`)
+      .catch(error => console.log(error));
+
     return result;
   }
 
-  static saveOrder(order) {
-    orderData.push(order);
+  static saveOrder(order, done) {
+    let cars = Car.findById(order.car);
 
-    // Return last saved Record
-    return orderData[orderData.length - 1];
+    cars
+      .then(car => {
+        if (car.rows.length === 0) done("Incorrect Car", null);
+
+        if (car.rows[0].owner === order.buyer) {
+          done("Buyer cant buy own car", null);
+        } else {
+          const query =
+            "INSERT INTO orders(id, buyer, car, status, price_offered)VALUES($1,$2,$3,$4,$5) RETURNING *";
+          const values = [
+            order.id,
+            order.buyer,
+            order.car,
+            order.status,
+            order.price_offered
+          ];
+
+          client.query(query, values, (err, res) => {
+            if (err) {
+              done(err, null);
+            } else {
+              done(null, res.rows);
+            }
+          });
+        }
+      })
+      .catch(err => {
+        done(err, null);
+      });
   }
 
   static updateOrder(order) {
@@ -54,10 +80,6 @@ class Order {
       }
     }
     return result;
-  }
-
-  generateId() {
-    return uuid.v1();
   }
 }
 
