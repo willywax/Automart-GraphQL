@@ -23,7 +23,7 @@ router.patch(
   auth,
   validators.checks.updateOrderPriceCheck,
   validators.validationResults,
-  orderController.updatePrice
+  orderController.updateOrder
 );
 
 router.patch(
@@ -31,7 +31,7 @@ router.patch(
   auth,
   validators.checks.updateOrderStatusCheck,
   validators.validationResults,
-  orderController.updateStatus
+  orderController.updateOrder
 );
 
 module.exports = router;

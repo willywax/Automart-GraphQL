@@ -58,16 +58,21 @@ class Order {
       });
   }
 
-  static updateOrder(order) {
-    let result = null;
-    for (let i = 0; i < orderData.length; i++) {
-      if (order.id === orderData[i].id) {
-        orderData[i] = order;
-        result = order;
-        break;
+  static updateOrder(order_id, order, done) {
+    let queryType = order.status ? "status" : "price_offered";
+    let value = order.status ? order.status : order.amount;
+
+    let query = `UPDATE orders SET ${queryType} = '${value}' WHERE id = '${order_id}' RETURNING *`;
+
+    console.log(query);
+
+    client.query(query, (err, res) => {
+      if (err) {
+        done(err, null);
+      } else {
+        done(null, res.rows);
       }
-    }
-    return result;
+    });
   }
 
   static getOrders() {
