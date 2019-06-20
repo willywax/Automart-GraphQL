@@ -81,15 +81,27 @@ exports.getUserCars = (req, res, next) => {
 };
 
 exports.updateCar = (req, res, next) => {
-  Car.updateOne(req.params.id, req.body, (err, result) => {
+  Car.updateOne(req.params.id, req.body, (err, cars) => {
     if (err) {
-      res.status(404).json({
-        error: err
-      });
+      res
+        .status(404)
+        .json(new Response(404, null, err, "Failed to update Cars").response());
     } else {
-      res.status(200).json({
-        data: result
-      });
+      let response =
+        cars.length === 0
+          ? new Response(
+              404,
+              cars,
+              null,
+              "Failed to update Car. Car Invalid Id"
+            ).response()
+          : new Response(
+              200,
+              cars[0],
+              null,
+              "Car Updated Successfully"
+            ).response();
+      res.status(response.status).json(response);
     }
   });
 };

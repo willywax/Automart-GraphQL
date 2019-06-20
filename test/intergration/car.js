@@ -194,4 +194,52 @@ describe("Testing Cars Enpoints", () => {
         done();
       });
   });
+
+  it("Should update Car price Successfully", done => {
+    let amount = {
+      price: 12000
+    };
+
+    requester
+      .patch("/car/" + carId + "/price")
+      .set("Authorization", token)
+      .send(amount)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+
+        done();
+      });
+  });
+
+  it("Should update Car Status Successfully", done => {
+    let status = {
+      status: "sold"
+    };
+
+    requester
+      .patch("/car/" + carId + "/status")
+      .set("Authorization", token)
+      .send(status)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+
+        done();
+      });
+  });
+
+  it("Fail update Car Status or Price if wrong carId", done => {
+    let status = {
+      status: "sold"
+    };
+
+    requester
+      .patch("/car/" + "123" + "/status")
+      .set("Authorization", token)
+      .send(status)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+
+        done();
+      });
+  });
 });

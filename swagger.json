@@ -90,7 +90,7 @@
             "name": "body",
             "description": "User object that needs to be added to the store",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/SignIn"
             }
           }
         ],
@@ -227,11 +227,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Car not found"
-          },
           "200": {
             "description": "Car deleted successfully"
+          },
+          "404": {
+            "description": "Car not found"
           }
         }
       }
@@ -258,17 +258,21 @@
           {
             "name": "carId",
             "in": "path",
-            "description": "Car id to update",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Car id to update"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Price"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Price"
-            }
+            "description": "successful operation"
           },
           "404": {
             "description": "Car not found"
@@ -301,6 +305,13 @@
             "description": "Car id to update",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
           }
         ],
         "responses": {
@@ -482,6 +493,23 @@
         "amount": {
           "type": "number",
           "description": "Amount"
+        }
+      },
+      "xml": {
+        "name": "Price"
+      }
+    },
+    "SignIn": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "email",
+          "example": "name@example.com"
+        },
+        "password": {
+          "type": "string",
+          "description": "password"
         }
       },
       "xml": {
