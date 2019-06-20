@@ -140,6 +140,180 @@
             ]
           }
         ]
+      },
+      "get": {
+        "tags": [
+          "car"
+        ],
+        "summary": "Returns list of cars",
+        "description": "Returns list of",
+        "operationId": "getInventory",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "No cars returned",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/car/{carId}": {
+      "get": {
+        "tags": [
+          "car"
+        ],
+        "summary": "Find car by ID",
+        "description": "Returns a single car",
+        "operationId": "getCarById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "carId",
+            "in": "path",
+            "description": "ID of car to return",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Car"
+            }
+          },
+          "404": {
+            "description": "Car not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "car"
+        ],
+        "summary": "Deletes a car",
+        "description": "",
+        "operationId": "deleteCar",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "carId",
+            "in": "path",
+            "description": "Car id to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Car not found"
+          },
+          "200": {
+            "description": "Car deleted successfully"
+          }
+        }
+      }
+    },
+    "/car/{carId}/price": {
+      "patch": {
+        "tags": [
+          "car"
+        ],
+        "summary": "Update price by Id",
+        "description": "Update price single car",
+        "operationId": "updateCarPrice",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "carId",
+            "in": "path",
+            "description": "Car id to update",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Price"
+            }
+          },
+          "404": {
+            "description": "Car not found"
+          }
+        }
+      }
+    },
+    "/car/{carId}/status": {
+      "patch": {
+        "tags": [
+          "car"
+        ],
+        "summary": "Update status by Id",
+        "description": "Update Status single car",
+        "operationId": "updateCarStatus",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "carId",
+            "in": "path",
+            "description": "Car id to update",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Price"
+            }
+          },
+          "404": {
+            "description": "Car not found"
+          }
+        }
       }
     },
     "/order": {
@@ -169,8 +343,8 @@
           }
         ],
         "responses": {
-          "422": {
-            "description": "Invalid input"
+          "201": {
+            "description": "Created"
           },
           "401": {
             "description": "Un Authorized"
@@ -178,8 +352,8 @@
           "404": {
             "description": "Invalid Car Id"
           },
-          "201": {
-            "description": "Created"
+          "422": {
+            "description": "Invalid input"
           }
         }
       }
@@ -277,6 +451,9 @@
           "type": "string"
         },
         "amount": {
+          "type": "string"
+        },
+        "status": {
           "type": "string",
           "description": "Order Status",
           "enum": [
@@ -285,6 +462,30 @@
             "delivered"
           ]
         }
+      }
+    },
+    "Status": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Status"
+        }
+      },
+      "xml": {
+        "name": "Status"
+      }
+    },
+    "Price": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "Amount"
+        }
+      },
+      "xml": {
+        "name": "Price"
       }
     },
     "ApiResponse": {

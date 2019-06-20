@@ -38,7 +38,7 @@ exports.getCars = (req, res, next) => {
               null,
               "Car Returned Successfully"
             ).response();
-      res.status(200).json(response);
+      res.status(response.status).json(response);
     }
   });
 };
@@ -52,7 +52,7 @@ exports.getCar = (req, res, next) => {
         car.rows.length === 0
           ? new Response(404, car.rows, null, "Car not Found").response()
           : new Response(200, car.rows, null, "Car Found").response();
-      res.status(200).json(response);
+      res.status(response.status).json(response);
     })
     .catch(err => {
       res
