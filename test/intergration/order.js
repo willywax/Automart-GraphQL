@@ -18,6 +18,8 @@ describe("Testing Orders Enpoints", () => {
 
   let userId = "";
 
+  let orderId = "";
+
   before("Creates Buyer", done => {
     let userDetails = {
       email: "buyer@automart.com",
@@ -138,6 +140,60 @@ describe("Testing Orders Enpoints", () => {
       .send(orderObject)
       .end((err, res) => {
         expect(res).to.have.status(404);
+        done();
+      });
+  });
+
+  it("Fails to get Order due to Invalid Token", done => {
+    requester
+      .get("/order")
+      .set("Authorization", "Invalid Token")
+      .send()
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        done();
+      });
+  });
+
+  it("Updates Order Price", done => {
+    const data = {
+      amount: 12500
+    };
+    requester
+      .patch("/order/" + orderId + "/price")
+      .set("Authorization", buyerToken)
+      .send(data)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+  it("Updates Order Status", done => {
+    const data = {
+      status: "accepted"
+    };
+    requester
+      .patch("/order/" + orderId + "/status")
+      .set("Authorization", sellerToken)
+      .send(data)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+  it("Returns error to update price of wrong Id", done => {
+    const data = {
+      amount: 15500
+    };
+    requester
+      .patch("/order/120/price")
+      .set("Authorization", buyerToken)
+      .send(data)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.data.length).equal(0);
         done();
       });
   });

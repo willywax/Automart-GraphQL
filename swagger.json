@@ -134,7 +134,7 @@
         },
         "security": [
           {
-            "petstore_auth": [
+            "automart_auth": [
               "write:cars",
               "read:cars"
             ]
@@ -368,18 +368,103 @@
           }
         }
       }
+    },
+    "/order/{orderId}/status": {
+      "patch": {
+        "tags": [
+          "order"
+        ],
+        "summary": "Update Order status by Id",
+        "description": "Update Status single order",
+        "operationId": "updateOrderStatus",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "Order id to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          },
+          "404": {
+            "description": "Order not found"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/price": {
+      "patch": {
+        "tags": [
+          "order"
+        ],
+        "summary": "Update Order Price by Id",
+        "description": "Update Price single order",
+        "operationId": "updateOrderPrice",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "Order id to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Price"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          },
+          "404": {
+            "description": "Order not found"
+          }
+        }
+      }
     }
   },
   "securityDefinitions": {
-    "petstore_auth": {
-      "type": "oauth2",
-      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
-      "flow": "implicit",
-      "scopes": {
-        "write:cars": "modify cars in your account",
-        "read:cars": "read your cars"
-      }
-    },
     "api_key": {
       "type": "apiKey",
       "name": "authorization",

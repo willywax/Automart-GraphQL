@@ -1,8 +1,5 @@
 const { check, validationResult } = require("express-validator/check");
 
-const User = require("../models/users");
-const Car = require("../models/cars");
-
 exports.checks = {
   singUpCheck: [
     check("email")
