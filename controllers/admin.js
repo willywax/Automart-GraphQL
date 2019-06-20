@@ -16,3 +16,5 @@ exports.createAdmin = (req, res, next) => {
     }
   });
 };
+
+exports.refreshDb = (req, res, next) => {};
