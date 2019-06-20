@@ -31,7 +31,7 @@ exports.getCars = (req, res, next) => {
     } else {
       let response =
         cars.length === 0
-          ? new Response(200, cars, null, "No Car Found").response()
+          ? new Response(404, cars, null, "No Car Found").response()
           : new Response(
               200,
               cars,
@@ -50,7 +50,7 @@ exports.getCar = (req, res, next) => {
     .then(car => {
       let response =
         car.rows.length === 0
-          ? new Response(200, car.rows, null, "Car not Found").response()
+          ? new Response(404, car.rows, null, "Car not Found").response()
           : new Response(200, car.rows, null, "Car Found").response();
       res.status(200).json(response);
     })
