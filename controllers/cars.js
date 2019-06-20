@@ -38,18 +38,21 @@ exports.getCars = (req, res, next) => {
 };
 
 exports.getCar = (req, res, next) => {
-  const car = Car.findById(req.params.id);
+  let result = Car.findById(req.params.id);
 
-  const data = {
-    status: 200,
-    data: car
-  };
-  if (car != null) {
-    res.status(200).json(data);
-  } else {
-    data.status = 404;
-    res.status(404).json(data);
-  }
+  result
+    .then(car => {
+      let response =
+        car.rows.length === 0
+          ? new Response(200, car.rows, null, "Car not Found").response()
+          : new Response(200, car.rows, null, "Car Found").response();
+      res.status(200).json(response);
+    })
+    .catch(err => {
+      res
+        .status(404)
+        .json(new Response(404, null, err, "Car Not found").response());
+    });
 };
 
 exports.getUserCars = (req, res, next) => {
