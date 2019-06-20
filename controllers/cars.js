@@ -81,27 +81,17 @@ exports.getUserCars = (req, res, next) => {
 };
 
 exports.updateCar = (req, res, next) => {
-  const car = Car.findById(req.params.id);
-
-  if (car !== null) {
-    if (req.body.price) {
-      car.price = req.body.price;
+  Car.updateOne(req.params.id, req.body, (err, result) => {
+    if (err) {
+      res.status(404).json({
+        error: err
+      });
     } else {
-      car.status = req.body.status;
+      res.status(200).json({
+        data: result
+      });
     }
-
-    const result = Car.updateOne(car);
-    const data = {
-      status: 200,
-      data: result
-    };
-
-    res.status(200).json(data);
-  } else {
-    res.status(404).json({
-      error: "Car not Found. Invalid Car Id used"
-    });
-  }
+  });
 };
 
 exports.deleteCar = (req, res, next) => {

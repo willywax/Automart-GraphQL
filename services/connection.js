@@ -8,6 +8,6 @@ const connectionString =
     ? process.env.TEST_URL
     : process.env.DATABASE_URL;
 
-const pool = new Pool({ connectionString: connectionString });
+pool = new Pool({ connectionString: connectionString });
 
 module.exports = pool;

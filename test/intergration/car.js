@@ -72,8 +72,8 @@ describe("Testing Cars Enpoints", () => {
 
   it("Creates car as authenticated User", done => {
     let carObject = {
-      state: "used",
-      price: 56000,
+      state: "new",
+      price: 55000,
       manufacturer: "Jeep",
       model: "Gladiator",
       body_type: "Pick Up",

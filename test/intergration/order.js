@@ -88,11 +88,11 @@ describe("Testing Orders Enpoints", () => {
 
   before("Creates car as with Seller Token User", done => {
     let carObject = {
-      state: "used",
-      price: 56000,
-      manufacturer: "Jeep",
-      model: "Gladiator",
-      body_type: "Pick Up",
+      state: "new",
+      price: 126000,
+      manufacturer: "Benz",
+      model: "S-Class",
+      body_type: "car",
       status: "available"
     };
 

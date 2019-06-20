@@ -63,16 +63,21 @@ class Car {
     return cars;
   }
 
-  static updateOne(car) {
-    let result = null;
-    for (let i = 0; i < carData.length; i++) {
-      if (carData[i].id === car.id) {
-        carData[i] = car;
-        result = carData[i];
-        break;
+  static updateOne(car_id, car, done) {
+    let queryType = car.status ? "status" : "price";
+    let value = car.status ? car.status : car.price;
+
+    let query = `UPDATE cars SET ${queryType} = '${value}' WHERE id = '${car_id}' RETURNING *`;
+
+    console.log(query);
+    client.query(query, (err, res) => {
+      if (err) {
+        done(err, null);
+      } else {
+        console.log;
+        done(null, res.rows);
       }
-    }
-    return result;
+    });
   }
 
   static filterCars(queries, carData) {
@@ -113,10 +118,6 @@ class Car {
       }
     }
     return result;
-  }
-
-  generateId() {
-    return uuid.v1();
   }
 }
 
