@@ -9,7 +9,6 @@ const app = express();
 const userRouter = require("./routers/users");
 const carRouter = require("./routers/cars");
 const orderRouter = require("./routers/orders");
-const flagRouter = require("./routers/flags");
 
 const helper = require("./utils/helper");
 
@@ -37,8 +36,6 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/car", carRouter);
 app.use("/api/v1/order", orderRouter);
-app.use("/api/v1/flag", flagRouter);
-
 app.use("/", helper.getError);
 
 module.exports = app;

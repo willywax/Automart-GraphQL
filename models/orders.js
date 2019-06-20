@@ -64,8 +64,6 @@ class Order {
 
     let query = `UPDATE orders SET ${queryType} = '${value}' WHERE id = '${order_id}' RETURNING *`;
 
-    console.log(query);
-
     client.query(query, (err, res) => {
       if (err) {
         done(err, null);
@@ -75,8 +73,15 @@ class Order {
     });
   }
 
-  static getOrders() {
-    return orderData;
+  static getOrders(done) {
+    let query = `SELECT * FROM orders`;
+    client.query(query, (err, res) => {
+      if (err) {
+        done(err, null);
+      } else {
+        done(null, res.rows);
+      }
+    });
   }
 
   static getOrdersByUser(user_id) {

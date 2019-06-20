@@ -69,12 +69,10 @@ class Car {
 
     let query = `UPDATE cars SET ${queryType} = '${value}' WHERE id = '${car_id}' RETURNING *`;
 
-    console.log(query);
     client.query(query, (err, res) => {
       if (err) {
         done(err, null);
       } else {
-        console.log;
         done(null, res.rows);
       }
     });
@@ -108,16 +106,16 @@ class Car {
     return cars;
   }
 
-  static deleteOne(car) {
-    let result = null;
-    for (let i = 0; i < carData.length; i++) {
-      if (carData[i].id === car.id) {
-        carData.splice(i, 1);
-        result = car;
-        break;
+  static deleteOne(car, done) {
+    let query = `DELETE FROM cars WHERE id='${car}' RETURNING *`;
+
+    client.query(query, (err, res) => {
+      if (err) {
+        done(err, null);
+      } else {
+        done(null, res);
       }
-    }
-    return result;
+    });
   }
 }
 

@@ -1,6 +1,15 @@
 const { check, validationResult } = require("express-validator/check");
 
 exports.checks = {
+  checkAdmin: [
+    check("email")
+      .isEmail()
+      .withMessage("Must have a valid Email"),
+    check("password")
+      .trim(" ")
+      .isLength({ min: 10 })
+      .withMessage("Password must have a min of 10 characters")
+  ],
   singUpCheck: [
     check("email")
       .isEmail()

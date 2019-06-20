@@ -26,6 +26,7 @@ exports.decrypt = (hash, value) => {
 
 /**Method for siging token */
 exports.generateToken = user => {
+  //let role =
   const token = jwt.sign(
     { userId: user.id, role: user.is_admin },
     process.env.SECRET_KEY,

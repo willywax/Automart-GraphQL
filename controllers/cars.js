@@ -61,25 +61,6 @@ exports.getCar = (req, res, next) => {
     });
 };
 
-exports.getUserCars = (req, res, next) => {
-  if (req.body.token.role || req.body.token.userId === req.params.userId) {
-    const cars = req.body.token.role
-      ? Car.getCars()
-      : Car.findByUser(req.params.userId);
-
-    const data = {
-      status: 200,
-      data: cars
-    };
-
-    res.status(200).json(data);
-  } else {
-    res.status(401).json({
-      error: "Not Authorised"
-    });
-  }
-};
-
 exports.updateCar = (req, res, next) => {
   Car.updateOne(req.params.id, req.body, (err, cars) => {
     if (err) {
@@ -107,25 +88,37 @@ exports.updateCar = (req, res, next) => {
 };
 
 exports.deleteCar = (req, res, next) => {
-  const car = Car.findById(req.params.id);
-
-  if (car !== null) {
-    if (req.body.token.role || req.body.token.userId === car.owner) {
-      const result = Car.deleteOne(car);
-
-      const data = {
-        status: 200,
-        data: result
-      };
-
-      res.status(200).json(data);
-    } else {
-      res.status(401).json({
-        error: "Not Authorised to delete Car"
-      });
-    }
+  if (req.body.token.role) {
+    Car.deleteOne(req.params.id, (err, cars) => {
+      if (err) {
+        res
+          .status(404)
+          .json(
+            new Response(404, null, err, "Failed to delete Car").response()
+          );
+      } else {
+        let response =
+          cars.rowCount === 0
+            ? new Response(
+                404,
+                cars.rows,
+                null,
+                "No car deleted. Invalid car Id "
+              ).response()
+            : new Response(
+                200,
+                cars.rows,
+                null,
+                "Car Deleted Successfully"
+              ).response();
+        res.status(response.status).json(response);
+      }
+    });
+  } else {
+    res
+      .status(401)
+      .json(
+        new Response(401, null, "Not Authorized", "Only admin can delete Car")
+      );
   }
-  res.status(404).json({
-    error: "Car not Found"
-  });
 };

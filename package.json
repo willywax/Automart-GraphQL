@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "test": "npm run drop && nyc mocha ./test/**/**.js --timeout 10000 --exit",
+    "test": "npm run drop && npm run configure-admin && nyc mocha ./test/**/**.js --timeout 10000 --exit",
     "createTables": "node ./services/createTables.js",
     "drop": "node ./services/dropSchema.js && npm run schema && npm run createTables",
     "schema": "node ./services/createSchema.js",
     "coverage": "nyc --reporter=lcov  npm test",
+    "configure-admin": "node ./main_test/main.js",
+    "deploy": "npm run drop && node index.js",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint '**/*.js'",
     "lint:fix": "prettier-eslint '**/*.js' --write"

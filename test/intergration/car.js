@@ -17,9 +17,11 @@ describe("Testing Cars Enpoints", () => {
 
   let userId = "";
 
+  let adminToken = "";
+
   before("Creates User", done => {
     let userDetails = {
-      email: "admin@automart.com",
+      email: "user1@automart.com",
       password: "admin",
       firstName: "firstName",
       lastName: "lastName",
@@ -35,10 +37,25 @@ describe("Testing Cars Enpoints", () => {
       });
   });
 
-  before("Authenticates User", done => {
+  before("Authenticates Admin", done => {
     /**Authenticates User First */
     let userDetails = {
       email: "admin@automart.com",
+      password: "adminadmin"
+    };
+    requester
+      .post("/auth/signin")
+      .send(userDetails)
+      .end((err, res) => {
+        adminToken = res.body.data.token;
+        done();
+      });
+  });
+
+  before("Authenticates User", done => {
+    /**Authenticates User First */
+    let userDetails = {
+      email: "user1@automart.com",
       password: "admin"
     };
     requester
@@ -236,6 +253,30 @@ describe("Testing Cars Enpoints", () => {
       .patch("/car/" + "123" + "/status")
       .set("Authorization", token)
       .send(status)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+
+        done();
+      });
+  });
+
+  it("Should delete Car successfully", done => {
+    requester
+      .delete("/car/" + carId)
+      .set("Authorization", adminToken)
+      .send()
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+
+        done();
+      });
+  });
+
+  it("Can not delete car with Invalid Id", done => {
+    requester
+      .delete("/car/" + carId)
+      .set("Authorization", adminToken)
+      .send()
       .end((err, res) => {
         expect(res).to.have.status(404);
 

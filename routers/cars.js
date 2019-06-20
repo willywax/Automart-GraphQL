@@ -16,8 +16,6 @@ router.post(
 router.get("/", carController.getCars);
 router.get("/:id", carController.getCar);
 
-router.get("/user/:id", auth, carController.getUserCars);
-
 router.patch(
   "/:id/status",
   auth,
