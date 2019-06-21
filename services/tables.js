@@ -43,15 +43,6 @@ CREATE TABLE IF NOT EXISTS
             description VARCHAR (255) NOT NULL,
             created_at DATE DEFAULT CURRENT_DATE
         )`;
-// const carTable = ``;
-// const ordersTable = ``;
-// const flagsTable = ``;
-
-const dropSchema = ``;
-
-const createSchema = ``;
-
 const tables = [userTable];
 
-module.exports = { dropSchema, createSchema, tables };
-//module.exports = [automartSchema, tables];
+module.exports = { tables };
