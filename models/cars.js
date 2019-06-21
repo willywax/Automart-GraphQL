@@ -1,4 +1,5 @@
 const helper = require("../utils/helper");
+const queries = require("../utils/queries");
 const client = require("../services/connection");
 const carData = [];
 
@@ -33,9 +34,9 @@ class Car {
 
     client.query(query, values, (err, res) => {
       if (err) {
-        done(err, null);
+        done([err], null);
       } else {
-        done(null, res.rows[0]);
+        done(null, res.rows);
       }
     });
   }
@@ -45,7 +46,7 @@ class Car {
 
     client.query(query, (err, res) => {
       if (err) {
-        done(err, null);
+        done([err], null);
       } else {
         let cars = Object.keys(queries).length
           ? this.filterCars(queries, res.rows)
@@ -56,9 +57,7 @@ class Car {
   }
 
   static async findById(car_id) {
-    let cars = await client
-      .query(`SELECT * FROM cars WHERE id='${car_id}'`)
-      .catch(error => console.log(error));
+    let cars = queries.selectQuery("cars", "id", car_id);
 
     return cars;
   }
@@ -67,7 +66,7 @@ class Car {
     let queryType = car.status ? "status" : "price";
     let value = car.status ? car.status : car.price;
 
-    let query = `UPDATE cars SET ${queryType} = '${value}' WHERE id = '${car_id}' RETURNING *`;
+    let query = `UPDATE cars SET ${queryType} = '${value}' WHERE id = '${car_id}' AND owner='${car.token.userId}' RETURNING *`;
 
     client.query(query, (err, res) => {
       if (err) {
@@ -106,16 +105,19 @@ class Car {
     return cars;
   }
 
-  static deleteOne(car, done) {
-    let query = `DELETE FROM cars WHERE id='${car}' RETURNING *`;
+  static async deleteOne(car, done) {
+    let cars = queries.deleteQuery("cars", "id", car);
 
-    client.query(query, (err, res) => {
-      if (err) {
-        done(err, null);
-      } else {
-        done(null, res);
-      }
-    });
+    return cars;
+    // let query = `DELETE FROM cars WHERE id='${car}' RETURNING *`;
+
+    // client.query(query, (err, res) => {
+    //   if (err) {
+    //     done(err, null);
+    //   } else {
+    //     done(null, res);
+    //   }
+    // });
   }
 }
 

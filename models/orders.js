@@ -3,8 +3,6 @@ const client = require("../services/connection");
 
 const Car = require("../models/cars");
 
-const orderData = [];
-
 class Order {
   constructor(order) {
     this.id = helper.generateId();
@@ -62,7 +60,11 @@ class Order {
     let queryType = order.status ? "status" : "price_offered";
     let value = order.status ? order.status : order.amount;
 
-    let query = `UPDATE orders SET ${queryType} = '${value}' WHERE id = '${order_id}' RETURNING *`;
+    let priceQuery = `UPDATE orders SET ${queryType} = '${value}' WHERE id = '${order_id}' AND buyer = '${order.token.userId}' RETURNING *`;
+
+    let statusQuery = `UPDATE orders SET ${queryType} = '${value}' WHERE id = '${order_id}'RETURNING *`;
+
+    let query = order.status ? statusQuery : priceQuery;
 
     client.query(query, (err, res) => {
       if (err) {
@@ -82,16 +84,6 @@ class Order {
         done(null, res.rows);
       }
     });
-  }
-
-  static getOrdersByUser(user_id) {
-    let result = [];
-    for (let i = 0; i < orderData.length; i++) {
-      if (user_id === orderData[i].buyer) {
-        result.push(orderData[i]);
-      }
-    }
-    return result;
   }
 }
 

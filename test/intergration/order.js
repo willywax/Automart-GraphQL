@@ -33,7 +33,7 @@ describe("Testing Orders Enpoints", () => {
       .send(userDetails)
       .end((err, res) => {
         expect(res).to.have.status(201);
-        userId = res.body.data.id;
+        userId = res.body.data[0].id;
         done();
       });
   });
@@ -48,7 +48,7 @@ describe("Testing Orders Enpoints", () => {
       .post("/auth/signin")
       .send(userDetails)
       .end((err, res) => {
-        buyerToken = res.body.data.token;
+        buyerToken = res.body.data[0].token;
 
         done();
       });
@@ -67,7 +67,7 @@ describe("Testing Orders Enpoints", () => {
       .send(userDetails)
       .end((err, res) => {
         expect(res).to.have.status(201);
-        userId = res.body.data.id;
+        userId = res.body.data[0].id;
         done();
       });
   });
@@ -82,7 +82,7 @@ describe("Testing Orders Enpoints", () => {
       .post("/auth/signin")
       .send(userDetails)
       .end((err, res) => {
-        sellerToken = res.body.data.token;
+        sellerToken = res.body.data[0].token;
 
         done();
       });
@@ -105,7 +105,7 @@ describe("Testing Orders Enpoints", () => {
       .end((err, res) => {
         expect(res).to.have.status(201);
 
-        carId = res.body.data.id;
+        carId = res.body.data[0].id;
 
         done();
       });
@@ -124,7 +124,7 @@ describe("Testing Orders Enpoints", () => {
       .end((err, res) => {
         expect(res).to.have.status(201);
 
-        orderId = res.body.data.id;
+        orderId = res.body.data[0].id;
         done();
       });
   });
@@ -155,7 +155,7 @@ describe("Testing Orders Enpoints", () => {
       });
   });
 
-  it("Updates Order Price", done => {
+  it("Buyer Updates Order Price", done => {
     const data = {
       amount: 12500
     };
@@ -169,7 +169,7 @@ describe("Testing Orders Enpoints", () => {
       });
   });
 
-  it("Updates Order Status", done => {
+  it("Seller Updates Order Status", done => {
     const data = {
       status: "accepted"
     };
@@ -192,8 +192,18 @@ describe("Testing Orders Enpoints", () => {
       .set("Authorization", buyerToken)
       .send(data)
       .end((err, res) => {
+        expect(res).to.have.status(404);
+        done();
+      });
+  });
+
+  it("Gets All Orders", done => {
+    requester
+      .get("/order")
+      .set("Authorization", buyerToken)
+      .send()
+      .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.data.length).equal(0);
         done();
       });
   });

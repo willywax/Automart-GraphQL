@@ -32,7 +32,9 @@ describe("Testing Cars Enpoints", () => {
       .send(userDetails)
       .end((err, res) => {
         expect(res).to.have.status(201);
-        userId = res.body.data.id;
+        userId = res.body.data[0].id;
+
+        console.log("User Id" + userId);
         done();
       });
   });
@@ -47,7 +49,8 @@ describe("Testing Cars Enpoints", () => {
       .post("/auth/signin")
       .send(userDetails)
       .end((err, res) => {
-        adminToken = res.body.data.token;
+        adminToken = res.body.data[0].token;
+
         done();
       });
   });
@@ -62,7 +65,7 @@ describe("Testing Cars Enpoints", () => {
       .post("/auth/signin")
       .send(userDetails)
       .end((err, res) => {
-        token = res.body.data.token;
+        token = res.body.data[0].token;
         done();
       });
   });
@@ -96,6 +99,7 @@ describe("Testing Cars Enpoints", () => {
       body_type: "Pick Up",
       status: "available"
     };
+    console.log("token " + token);
 
     requester
       .post("/car")
@@ -104,7 +108,7 @@ describe("Testing Cars Enpoints", () => {
       .end((err, res) => {
         expect(res).to.have.status(201);
 
-        carId = res.body.data.id;
+        carId = res.body.data[0].id;
 
         done();
       });

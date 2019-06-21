@@ -1,5 +1,6 @@
 const User = require("../models/users");
 const Response = require("../utils/response");
+const helper = require("../utils/helper");
 
 exports.signUp = (req, res, next) => {
   const newUser = new User(req.body);
@@ -10,6 +11,8 @@ exports.signUp = (req, res, next) => {
         .status(404)
         .json(new Response(404, null, err, "Sign Up Failed").response());
     } else {
+      user[0].token = helper.generateToken(user[0]);
+      user[0] = helper.removeKeys(user[0], ["password"]);
       res
         .status(201)
         .json(

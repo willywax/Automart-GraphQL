@@ -43,7 +43,8 @@ exports.getCars = (req, res, next) => {
   });
 };
 
-exports.getCar = (req, res, next) => {
+exports.getOneCar = (req, res, next) => {
+  console.log("ID " + req.params.id);
   let result = Car.findById(req.params.id);
 
   result
@@ -62,6 +63,8 @@ exports.getCar = (req, res, next) => {
 };
 
 exports.updateCar = (req, res, next) => {
+  let findCar = Car.findById(req.params.id);
+
   Car.updateOne(req.params.id, req.body, (err, cars) => {
     if (err) {
       res
@@ -78,7 +81,7 @@ exports.updateCar = (req, res, next) => {
             ).response()
           : new Response(
               200,
-              cars[0],
+              cars,
               null,
               "Car Updated Successfully"
             ).response();
@@ -89,31 +92,27 @@ exports.updateCar = (req, res, next) => {
 
 exports.deleteCar = (req, res, next) => {
   if (req.body.token.role) {
-    Car.deleteOne(req.params.id, (err, cars) => {
-      if (err) {
+    let result = Car.deleteOne(req.params.id);
+    result
+      .then(car => {
+        let response =
+          car.rowCount === 0
+            ? new Response(404, car.rows, null, "Car not Found").response()
+            : new Response(
+                200,
+                car.rows,
+                null,
+                "Car Deleted sucessfully"
+              ).response();
+        res.status(response.status).json(response);
+      })
+      .catch(err => {
         res
           .status(404)
           .json(
             new Response(404, null, err, "Failed to delete Car").response()
           );
-      } else {
-        let response =
-          cars.rowCount === 0
-            ? new Response(
-                404,
-                cars.rows,
-                null,
-                "No car deleted. Invalid car Id "
-              ).response()
-            : new Response(
-                200,
-                cars.rows,
-                null,
-                "Car Deleted Successfully"
-              ).response();
-        res.status(response.status).json(response);
-      }
-    });
+      });
   } else {
     res
       .status(401)

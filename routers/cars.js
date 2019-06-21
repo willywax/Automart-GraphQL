@@ -14,7 +14,7 @@ router.post(
   carController.saveCar
 );
 router.get("/", carController.getCars);
-router.get("/:id", carController.getCar);
+router.get("/:id", carController.getOneCar);
 
 router.patch(
   "/:id/status",

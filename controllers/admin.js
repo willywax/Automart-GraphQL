@@ -2,8 +2,6 @@ const User = require("../models/users");
 const Response = require("../utils/response");
 
 exports.createAdmin = (req, res, next) => {
-  //const newUser = new User(req.body);
-
   User.makeAdmin(req.body, (err, user) => {
     if (err) {
       res

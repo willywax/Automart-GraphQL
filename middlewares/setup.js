@@ -8,15 +8,13 @@ exports.users = (req, res, next) => {
   results
     .then(users => {
       if (users.rows.length === 0) {
-        res.status(401).json(new Response(401, [], null, "System Not Setup"));
+        res.status(403).json(new Response(403, [], [], "System Not Setup"));
       } else {
         next();
       }
     })
     .catch(err => {
-      res
-        .status(500)
-        .json(new Response(500, [], null, "Internal Server Error"));
+      res.status(500).json(new Response(500, [], [], "Internal Server Error"));
     });
 };
 

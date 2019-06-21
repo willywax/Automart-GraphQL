@@ -20,7 +20,6 @@ const carTable = `CREATE TABLE IF NOT EXISTS
             manufacturer VARCHAR (255) NOT NULL,
             body_type VARCHAR (100) NOT NULL,
             primary_image VARCHAR(255) NOT NULL,
-
             created_at DATE DEFAULT CURRENT_DATE
         )`;
 const ordersTable = `CREATE TABLE IF NOT EXISTS 
