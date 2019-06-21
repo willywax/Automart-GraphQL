@@ -264,6 +264,17 @@ describe("Testing Cars Enpoints", () => {
       });
   });
 
+  it("Fail to delete Car if not admin", done => {
+    requester
+      .delete("/car/" + carId)
+      .set("Authorization", token)
+      .send()
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+
+        done();
+      });
+  });
   it("Should delete Car successfully", done => {
     requester
       .delete("/car/" + carId)
