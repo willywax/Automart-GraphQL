@@ -1,8 +1,10 @@
 const pool = require("./connection");
 
-const { userTable } = require("./tables");
+const { tables } = require("./tables");
 
-prepareTables(userTable);
+tables.forEach(element => {
+  prepareTables(element);
+});
 
 function prepareTables(query) {
   pool

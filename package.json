@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "test": "nyc mocha ./test/**/**.js --timeout 10000 --exit",
-    "travis": "npm run drop && npm run configure-admin",
-    "drop": "node ./services/createTables.js",
+    "test": "npm run drop && npm run configure-admin && nyc mocha ./test/**/**.js --timeout 10000 --exit",
+    "createTables": "node ./services/createTables.js",
+    "drop": "node ./services/dropSchema.js && npm run schema && npm run createTables",
+    "schema": "node ./services/createSchema.js",
     "coverage": "nyc --reporter=lcov  npm test",
     "configure-admin": "node ./maintest/main.js",
     "deploy": "npm run drop && node index.js",

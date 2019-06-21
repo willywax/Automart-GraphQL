@@ -1,9 +1,4 @@
-const userTable = `
-DROP SCHEMA IF EXISTS public CASCADE;
-
-CREATE SCHEMA public;
-
-CREATE TABLE 
+const userTable = `CREATE TABLE IF NOT EXISTS
         users(
           id VARCHAR PRIMARY KEY,
           first_name VARCHAR(128) NOT NULL,
@@ -13,8 +8,8 @@ CREATE TABLE
           address VARCHAR(128) NOT NULL,
           is_admin BOOLEAN DEFAULT false,
           created_at DATE DEFAULT CURRENT_DATE
-        ); 
-        CREATE TABLE IF NOT EXISTS 
+        )`;
+const carTable = `CREATE TABLE IF NOT EXISTS 
         cars(
             id VARCHAR PRIMARY KEY,
             owner VARCHAR (100) NOT NULL,
@@ -26,8 +21,8 @@ CREATE TABLE
             body_type VARCHAR (100) NOT NULL,
             primary_image VARCHAR(255) NOT NULL,
             created_at DATE DEFAULT CURRENT_DATE
-        );
-        CREATE TABLE IF NOT EXISTS 
+        )`;
+const ordersTable = `CREATE TABLE IF NOT EXISTS 
         orders(
             id VARCHAR PRIMARY KEY,
             buyer VARCHAR (100) NOT NULL,
@@ -35,8 +30,8 @@ CREATE TABLE
             status VARCHAR (100) NOT NULL,
             price_offered DECIMAL NOT NULL,
             created_at DATE DEFAULT CURRENT_DATE
-        ); 
-        CREATE TABLE IF NOT EXISTS 
+        )`;
+const flagsTable = `CREATE TABLE IF NOT EXISTS 
         flags(
             id VARCHAR PRIMARY KEY,
             car VARCHAR (100) NOT NULL,
@@ -45,4 +40,11 @@ CREATE TABLE
             created_at DATE DEFAULT CURRENT_DATE
         )`;
 
-module.exports = { userTable };
+const dropSchema = `DROP SCHEMA IF EXISTS public CASCADE`;
+
+const createSchema = `CREATE SCHEMA IF NOT EXISTS public`;
+
+const tables = [userTable, carTable, ordersTable, flagsTable];
+
+module.exports = { dropSchema, createSchema, tables };
+//module.exports = [automartSchema, tables];
