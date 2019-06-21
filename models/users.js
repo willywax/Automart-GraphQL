@@ -77,6 +77,37 @@ class User {
 
     return result;
   }
+
+  static async getUsers() {
+    const result = await client
+      .query(`SELECT * FROM users`)
+      .catch(error => console.log(error));
+
+    return result;
+  }
+
+  /**Runs only once at */
+  static makeAdmin(user, done) {
+    const query =
+      "INSERT INTO users(id, first_name, last_name, email, password, address, is_admin)VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *";
+    const values = [
+      helper.generateId(),
+      "Admin",
+      "Admin",
+      user.email,
+      helper.encrypt(user.password),
+      "Admin Address",
+      true
+    ];
+
+    client.query(query, values, (err, res) => {
+      if (err) {
+        done(err, null);
+      } else {
+        done(null, res.rows[0]);
+      }
+    });
+  }
 }
 
 module.exports = User;

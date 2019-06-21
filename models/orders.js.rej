@@ -1,4 +1,0 @@
-diff a/models/orders.js b/models/orders.js	(rejected hunks)
-@@ -24 +24 @@ class Order {
--  
-+
