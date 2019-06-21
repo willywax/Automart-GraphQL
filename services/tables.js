@@ -1,9 +1,9 @@
 const userTable = `
 DROP SCHEMA IF EXISTS public CASCADE;
 
-CREATE SCHEMA IF NOT EXISTS public;
+CREATE SCHEMA public;
 
-CREATE TABLE IF NOT EXISTS
+CREATE TABLE 
         users(
           id VARCHAR PRIMARY KEY,
           first_name VARCHAR(128) NOT NULL,
@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS
             manufacturer VARCHAR (255) NOT NULL,
             body_type VARCHAR (100) NOT NULL,
             primary_image VARCHAR(255) NOT NULL,
-
             created_at DATE DEFAULT CURRENT_DATE
         );
         CREATE TABLE IF NOT EXISTS 
