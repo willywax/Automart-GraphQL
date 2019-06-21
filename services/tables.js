@@ -45,6 +45,5 @@ CREATE TABLE IF NOT EXISTS
             description VARCHAR (255) NOT NULL,
             created_at DATE DEFAULT CURRENT_DATE
         )`;
-const tables = [userTable];
 
 module.exports = { userTable };

@@ -2,11 +2,6 @@ const pool = require("./connection");
 
 const { userTable } = require("./tables");
 
-// tables.forEach(element => {
-//   prepareTables(element);
-// });
-console.log(userTable);
-
 prepareTables(userTable);
 
 function prepareTables(query) {

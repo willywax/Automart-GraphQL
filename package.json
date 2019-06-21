@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "test": "npm run drop && npm run configure-admin && nyc mocha ./test/**/**.js --timeout 10000 --exit",
+    "test": "nyc mocha ./test/**/**.js --timeout 10000 --exit",
     "travis": "npm run drop && npm run configure-admin",
     "drop": "node ./services/createTables.js",
     "coverage": "nyc --reporter=lcov  npm test",
