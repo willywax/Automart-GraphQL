@@ -1,4 +1,5 @@
 const { check, validationResult } = require("express-validator/check");
+const Response = require("../utils/response");
 
 exports.checks = {
   checkAdmin: [
@@ -25,7 +26,11 @@ exports.checks = {
     check("lastName")
       .trim(" ")
       .isLength({ min: 1 })
-      .withMessage("lastName is a required Field")
+      .withMessage("lastName is a required Field"),
+    check("address")
+      .trim(" ")
+      .isLength({ min: 5 })
+      .withMessage("address is a required Field. Min 5 characters")
   ],
   singInCheck: [
     check("email")
@@ -57,7 +62,13 @@ exports.checks = {
     check("price")
       .isDecimal()
       .escape()
-      .withMessage("price field is required"),
+      .withMessage("price field is required")
+      .custom(value => {
+        if (value <= 0) {
+          throw new Error("Price must be a number and larger than 0");
+        }
+        return true;
+      }),
     check("manufacturer")
       .isString()
       .trim(" ")
@@ -88,6 +99,12 @@ exports.checks = {
     check("amount")
       .isDecimal()
       .withMessage("amount field is required")
+      .custom(value => {
+        if (value <= 0) {
+          throw new Error("Amount must be a number and larger than 0");
+        }
+        return true;
+      })
   ],
   updateOrderStatusCheck: [
     check("status")
@@ -100,7 +117,11 @@ exports.validationResults = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(422).json(errors.array());
+    return res
+      .status(422)
+      .json(
+        new Response(422, null, errors.array(), "Invalid Input").response()
+      );
   } else {
     next();
   }

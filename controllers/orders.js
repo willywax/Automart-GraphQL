@@ -42,24 +42,29 @@ exports.getOrder = (req, res, next) => {
 };
 
 exports.updateOrder = (req, res, next) => {
-  Order.updateOrder(req.params.id, req.body, (err, order) => {
+  Order.updateOrder(req.params.id, req.body, (err, orders) => {
     if (err) {
       res
         .status(404)
         .json(
-          new Response(404, null, err, "Order failed to create").response()
+          new Response(404, null, err, "Order failed to update").response()
         );
     } else {
-      res
-        .status(200)
-        .json(
-          new Response(
-            200,
-            order,
-            null,
-            "Order created successfully"
-          ).response()
-        );
+      let response =
+        orders.length === 0
+          ? new Response(
+              404,
+              orders,
+              null,
+              "Failed to update Order. Invalid Order Id"
+            ).response()
+          : new Response(
+              200,
+              orders,
+              null,
+              "Order Updated Successfully"
+            ).response();
+      res.status(response.status).json(response);
     }
   });
 };

@@ -18,15 +18,18 @@ class User {
     result
       .then(emails => {
         if (emails.rows.length !== 0) {
-          let user = emails.rows[0];
+          let user = emails.rows;
 
           const authenticate = helper.decrypt(
-            user.password,
+            user[0].password,
             authenticatingUser.password
           );
 
+          //Removing Password Field
+          delete user[0].password;
+
           if (authenticate) {
-            user.token = helper.generateToken(user);
+            user[0].token = helper.generateToken(user[0]);
             done(null, user);
           } else {
             done("Incorrect Password", null);
@@ -61,7 +64,7 @@ class User {
           if (err) {
             done(err, null);
           } else {
-            done(null, res.rows[0]);
+            done(null, res.rows);
           }
         });
       } else {

@@ -48,9 +48,20 @@ exports.decodeToken = token => {
 /**Handles Error Message if incorrect route or method */
 exports.getError = (req, res) => {
   const url = req.method + " " + req.protocol + "://" + req.hostname + req.url;
+
   res
     .status(405)
     .json(
       new Response(405, url, null, "Incorrect method or Invalid path Found")
     );
+};
+
+/** REmoved Fields or key from objects*/
+exports.removeKeys = (obj, keyArray) => {
+  //let pair = keyArray
+  for (let i = 0; i < keyArray.length; i++) {
+    delete obj[keyArray[i]];
+  }
+
+  return obj;
 };

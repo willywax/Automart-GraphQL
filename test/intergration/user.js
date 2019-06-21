@@ -59,7 +59,6 @@ describe("Testing User Enpoints", () => {
       .send(userDetails)
       .end((err, res) => {
         expect(res).to.have.status(200);
-
         done();
       });
   });
