@@ -1,6 +1,8 @@
 const userTable = `
 DROP SCHEMA IF EXISTS public CASCADE;
+
 CREATE SCHEMA IF NOT EXISTS public;
+
 CREATE TABLE IF NOT EXISTS
         users(
           id VARCHAR PRIMARY KEY,
@@ -45,4 +47,4 @@ CREATE TABLE IF NOT EXISTS
         )`;
 const tables = [userTable];
 
-module.exports = { tables };
+module.exports = { userTable };
