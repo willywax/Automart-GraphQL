@@ -28,17 +28,17 @@ exports.saveOrder = (req, res, next) => {
 };
 
 exports.getOrder = (req, res, next) => {
-  Order.getOrders((err, result) => {
-    if (err) {
-      res.status(404).json({
-        error: err
-      });
-    } else {
-      res.status(200).json({
-        data: result
-      });
-    }
-  });
+  Order.getOrders()
+    .then(orders => {
+      res
+        .status(200)
+        .json(new Response(200, orders, null, "Orders Queried successfully"));
+    })
+    .catch(err => {
+      res
+        .status(404)
+        .json(new Response(404, null, err, "Failed to get Orders"));
+    });
 };
 
 exports.updateOrder = (req, res, next) => {

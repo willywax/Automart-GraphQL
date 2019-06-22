@@ -128,6 +128,7 @@ describe("Testing Orders Enpoints", () => {
         done();
       });
   });
+
   it("Failes to create Order. Buyer can't buy own car", done => {
     let orderObject = {
       car: carId,
@@ -137,6 +138,22 @@ describe("Testing Orders Enpoints", () => {
     requester
       .post("/order")
       .set("Authorization", sellerToken)
+      .send(orderObject)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        done();
+      });
+  });
+
+  it("Failes to create Order. Invalid Car Id", done => {
+    let orderObject = {
+      car: "1232",
+      amount: 150000
+    };
+
+    requester
+      .post("/order")
+      .set("Authorization", buyerToken)
       .send(orderObject)
       .end((err, res) => {
         expect(res).to.have.status(404);

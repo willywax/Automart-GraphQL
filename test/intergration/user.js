@@ -10,7 +10,19 @@ const index = require("../../index");
 const app = require("../../app");
 
 describe("Testing User Enpoints", () => {
-  after("Deleting User", () => {});
+  it("Fails to create Admin", done => {
+    let userDetails = {
+      email: "test@automart.com",
+      password: "123123"
+    };
+    requester
+      .post("/auth/setup")
+      .send(userDetails)
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        done();
+      });
+  });
 
   it("Register User User", done => {
     let userDetails = {

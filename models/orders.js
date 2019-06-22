@@ -1,5 +1,6 @@
 const helper = require("../utils/helper");
 const client = require("../services/connection");
+const queries = require("../utils/queries");
 
 const Car = require("../models/cars");
 
@@ -10,14 +11,6 @@ class Order {
     this.buyer = order.buyer;
     this.status = "pending"; // Default Status when Order is made
     this.price_offered = order.amount;
-  }
-
-  static async findById(order) {
-    const result = await client
-      .query(`SELECT * FROM orders WHERE id='${order}'`)
-      .catch(error => console.log(error));
-
-    return result;
   }
 
   static saveOrder(order, done) {
@@ -75,15 +68,10 @@ class Order {
     });
   }
 
-  static getOrders(done) {
-    let query = `SELECT * FROM orders`;
-    client.query(query, (err, res) => {
-      if (err) {
-        done(err, null);
-      } else {
-        done(null, res.rows);
-      }
-    });
+  static getOrders() {
+    let result = queries.selectQuery("orders", "*", "*");
+
+    return result;
   }
 }
 
