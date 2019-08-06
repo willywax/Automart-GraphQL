@@ -1,6 +1,5 @@
-const pool = require("./connection");
-
-const { dropSchema } = require("./tables");
+import pool from "./connection";
+import { dropSchema } from "./tables";
 
 pool
   .query(dropSchema)

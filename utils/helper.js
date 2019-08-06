@@ -1,23 +1,24 @@
-const uuid = require("uuid");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const Response = require("./response");
-const dotenv = require("dotenv");
+import uuid from "uuid";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import Response from "./response";
+import dotenv from "dotenv";
+
 dotenv.config();
 
 /** Method to Generate Unique UUUID */
-exports.generateId = () => {
+export let generateId = () => {
   return uuid.v1();
 };
 
 /** Method to encrypt passwords */
-exports.encrypt = value => {
+export let encrypt = value => {
   const hash = bcrypt.hashSync(value, 10);
   return hash;
 };
 
 /** Method to decrypt passwords */
-exports.decrypt = (hash, value) => {
+export let decrypt = (hash, value) => {
   if (bcrypt.compareSync(value, hash)) {
     return true;
   }
@@ -25,7 +26,7 @@ exports.decrypt = (hash, value) => {
 };
 
 /**Method for siging token */
-exports.generateToken = user => {
+export let generateToken = user => {
   //let role =
   const token = jwt.sign(
     { userId: user.id, role: user.is_admin },
@@ -39,14 +40,14 @@ exports.generateToken = user => {
 };
 /** Saving */
 
-exports.decodeToken = token => {
+export let decodeToken = token => {
   const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
 
   return decodeToken;
 };
 
 /**Handles Error Message if incorrect route or method */
-exports.getError = (req, res) => {
+export let getError = (req, res) => {
   const url = req.method + " " + req.protocol + "://" + req.hostname + req.url;
 
   res
@@ -57,7 +58,7 @@ exports.getError = (req, res) => {
 };
 
 /** REmoved Fields or key from objects*/
-exports.removeKeys = (obj, keyArray) => {
+export let removeKeys = (obj, keyArray) => {
   //let pair = keyArray
   for (let i = 0; i < keyArray.length; i++) {
     delete obj[keyArray[i]];

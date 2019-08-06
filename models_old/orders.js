@@ -1,12 +1,12 @@
-const helper = require("../utils/helper");
-const client = require("../services/connection");
-const queries = require("../utils/queries");
+import { generateId } from "../utils/helper";
+import client from "../services/connection";
+import { selectQuery, deleteQuery } from "../utils/queries";
 
-const Car = require("../models/cars");
+import Car from "../models/cars";
 
 class Order {
   constructor(order) {
-    this.id = helper.generateId();
+    this.id = generateId();
     this.car = order.car;
     this.buyer = order.buyer;
     this.status = "pending"; // Default Status when Order is made
@@ -69,10 +69,10 @@ class Order {
   }
 
   static getOrders() {
-    let result = queries.selectQuery("orders", "*", "*");
+    let result = selectQuery("orders", "*", "*");
 
     return result;
   }
 }
 
-module.exports = Order;
+export default Order;

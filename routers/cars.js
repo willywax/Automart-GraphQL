@@ -1,36 +1,35 @@
-const express = require("express");
-const validator = require("../middlewares/validatator");
-const router = express.Router();
+import express from "express";
+import { checks, validationResults } from "../middlewares/validatator";
 
-const carController = require("../controllers/cars");
+export const carRouter = express.Router();
 
-const auth = require("../middlewares/authentication");
+import carController from "../controllers/cars";
+import auth from "../middlewares/authentication";
 
-router.post(
+carRouter.post(
   "/",
   auth,
-  validator.checks.postCarCheck,
-  validator.validationResults,
+  checks.postCarCheck,
+  validationResults,
   carController.saveCar
 );
-router.get("/", carController.getCars);
-router.get("/:id", carController.getOneCar);
+carRouter.get("/", carController.getCars);
+carRouter.get("/:id", carController.getOneCar);
 
-router.patch(
+carRouter.patch(
   "/:id/status",
   auth,
-  validator.checks.patchCarCheckStatus,
-  validator.validationResults,
+  checks.patchCarCheckStatus,
+  validationResults,
   carController.updateCar
 );
 
-router.patch(
+carRouter.patch(
   "/:id/price",
   auth,
-  validator.checks.patchCarCheckPrice,
-  validator.validationResults,
+  checks.patchCarCheckPrice,
+  validationResults,
   carController.updateCar
 );
-router.delete("/:id", auth, carController.deleteCar);
 
-module.exports = router;
+carRouter.delete("/:id", auth, carController.deleteCar);

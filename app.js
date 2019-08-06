@@ -1,16 +1,17 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const swaggerUi = require("swagger-ui-express");
+"use strict";
+import express from "express";
+import bodyParser from "body-parser";
+import swaggerUi from "swagger-ui-express";
 
-const swaggerDocument = require("./swagger.json");
+import swaggerDocument from "./swagger.json";
 
-const app = express();
+import userRouter from "./routers/users";
+import carRouter from "./routers/cars";
+import orderRouter from "./routers/orders";
 
-const userRouter = require("./routers/users");
-const carRouter = require("./routers/cars");
-const orderRouter = require("./routers/orders");
+import { getError } from "./utils/helper";
 
-const helper = require("./utils/helper");
+export const app = express();
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -36,6 +37,4 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/car", carRouter);
 app.use("/api/v1/order", orderRouter);
-app.use("/", helper.getError);
-
-module.exports = app;
+app.use("/", getError);

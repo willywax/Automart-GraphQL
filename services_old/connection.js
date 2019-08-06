@@ -1,5 +1,5 @@
-const { Pool } = require("pg");
-const dotenv = require("dotenv");
+import { Pool } from "pg";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -8,6 +8,17 @@ const connectionString =
     ? process.env.TEST_URL
     : process.env.DATABASE_URL;
 
-pool = new Pool({ connectionString: connectionString });
+export let pool = new Pool({ connectionString: connectionString });
 
-module.exports = pool;
+export let client = (queries, params) => {
+  return new Promise((resolve, reject) => {
+    pool
+      .query(queries, params)
+      .then(res => {
+        resolve(res);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+};

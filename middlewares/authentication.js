@@ -1,11 +1,12 @@
 /** Verifies if the User is a registered User */
-const helper = require("../utils/helper");
-const Response = require("../utils/response");
 
-module.exports = (req, res, next) => {
+import { decodeToken } from "../utils/helper";
+import Response from "../utils/response";
+
+export default (req, res, next) => {
   try {
     const token = req.headers.authorization;
-    req.body.token = helper.decodeToken(token);
+    req.body.token = decodeToken(token);
     if (req.body.token.userId && req.body.token.userId !== null) {
       next();
     } else {

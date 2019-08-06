@@ -1,4 +1,4 @@
-const User = require("../models/users");
+import User from "../models/users";
 
 const adminTest = {
   email: "admin@automart.com",

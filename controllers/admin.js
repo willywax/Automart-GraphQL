@@ -1,7 +1,7 @@
-const User = require("../models/users");
-const Response = require("../utils/response");
+import User from "../models/users";
+import Response from "../utils/response";
 
-exports.createAdmin = (req, res, next) => {
+export let createAdmin = (req, res, next) => {
   User.makeAdmin(req.body, (err, user) => {
     if (err) {
       res
@@ -15,4 +15,4 @@ exports.createAdmin = (req, res, next) => {
   });
 };
 
-exports.refreshDb = (req, res, next) => {};
+export let refreshDb = (req, res, next) => {};

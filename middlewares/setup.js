@@ -1,7 +1,7 @@
-const User = require("../models/users");
-const Response = require("../utils/response");
+import User from "../models/users";
+import Response from "../utils/response";
 
-exports.users = (req, res, next) => {
+export let users = (req, res, next) => {
   //Check if any user in the system
   let results = User.getUsers();
 
@@ -18,7 +18,7 @@ exports.users = (req, res, next) => {
     });
 };
 
-exports.admin = (req, res, next) => {
+export let admin = (req, res, next) => {
   //Check if any user in the system
   let results = User.getUsers();
 
