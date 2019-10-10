@@ -15,7 +15,8 @@
     "deploy": "npm run drop && node index.js",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint '**/*.js'",
-    "lint:fix": "prettier-eslint '**/*.js' --write"
+    "lint:fix": "prettier-eslint '**/*.js' --write",
+    "migrate:dev": "sequelize db:migrate:undo:all && sequelize db:migrate"
   },
   "husky": {
     "hooks": {
@@ -46,11 +47,15 @@
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
     "pg": "^7.11.0",
+    "sequelize": "^5.19.4",
+    "sequelize-cli": "^5.5.1",
     "swagger-ui": "^3.22.3",
     "swagger-ui-express": "^4.0.6",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.6.3",
+    "@babel/register": "^7.6.2",
     "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
