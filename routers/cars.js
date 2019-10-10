@@ -17,17 +17,9 @@ carRouter.get("/", carController.getCars);
 carRouter.get("/:id", carController.getOneCar);
 
 carRouter.patch(
-  "/:id/status",
+  "/:id",
   auth,
-  checks.patchCarCheckStatus,
-  validationResults,
-  carController.updateCar
-);
-
-carRouter.patch(
-  "/:id/price",
-  auth,
-  checks.patchCarCheckPrice,
+  checks.patchCarCheck,
   validationResults,
   carController.updateCar
 );

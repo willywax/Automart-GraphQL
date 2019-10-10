@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "nodemon --exec babel-node index.js",
     "debug": "nodemon --inspect-brk --exec babel-node index.js",
-    "test": "nyc mocha ./test/**/**.js --require @babel/register --recursive --timeout 10000 --exit",
+    "test": "npm run migrate:dev && nyc mocha ./test/**/**.js --require @babel/register --recursive --timeout 10000 --exit",
     "coverage": "nyc --reporter=lcov  npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint '**/*.js'",
     "lint:fix": "prettier-eslint '**/*.js' --write",
-    "migrate:dev": "sequelize db:migrate:undo:all && sequelize db:migrate"
+    "migrate:dev": "sequelize db:migrate:undo:all && sequelize db:migrate && npm run seed --env development",
+    "seed": "sequelize db:seed:all"
   },
   "husky": {
     "hooks": {

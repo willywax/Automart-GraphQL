@@ -1,4 +1,5 @@
-import { Cars } from "../database/models";
+import database from "../database/models";
+const { Cars } = database;
 
 class CarService {
   static async saveCar(car) {
@@ -11,7 +12,8 @@ class CarService {
 
   static async findCar(param) {
     try {
-      return await Cars.findAll({ where: { param } });
+      console.log(param);
+      return await Cars.findAll({ where: param });
     } catch (error) {
       throw error;
     }
@@ -21,7 +23,7 @@ class CarService {
     try {
       let result = await Cars.update(newCar, {
         returning: true,
-        where: { param }
+        where: param
       });
       return result;
     } catch (error) {
@@ -30,7 +32,7 @@ class CarService {
   }
   static async deleteCar(param) {
     try {
-      return await Cars.destroy({ where: { param } });
+      return await Cars.destroy({ where: param });
     } catch (error) {
       throw error;
     }

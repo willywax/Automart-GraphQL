@@ -27,8 +27,8 @@ describe("Testing Orders Enpoints", () => {
     let userDetails = {
       email: "buyer@automart.com",
       password: "admin",
-      firstName: "firstName",
-      lastName: "lastName",
+      first_name: "firstName",
+      last_name: "lastName",
       address: "144 Posta"
     };
     requester
@@ -36,7 +36,7 @@ describe("Testing Orders Enpoints", () => {
       .send(userDetails)
       .end((err, res) => {
         expect(res).to.have.status(201);
-        userId = res.body.data[0].id;
+        userId = res.body.data.id;
         done();
       });
   });
@@ -51,7 +51,7 @@ describe("Testing Orders Enpoints", () => {
       .post("/auth/signin")
       .send(userDetails)
       .end((err, res) => {
-        buyerToken = res.body.data[0].token;
+        buyerToken = res.body.data.token;
 
         done();
       });
@@ -61,8 +61,8 @@ describe("Testing Orders Enpoints", () => {
     let userDetails = {
       email: "seller@automart.com",
       password: "admin",
-      firstName: "Seller",
-      lastName: "lastName",
+      first_name: "Seller",
+      last_name: "lastName",
       address: "144 Posta"
     };
     requester
@@ -70,7 +70,7 @@ describe("Testing Orders Enpoints", () => {
       .send(userDetails)
       .end((err, res) => {
         expect(res).to.have.status(201);
-        userId = res.body.data[0].id;
+        userId = res.body.data.id;
         done();
       });
   });
@@ -85,7 +85,7 @@ describe("Testing Orders Enpoints", () => {
       .post("/auth/signin")
       .send(userDetails)
       .end((err, res) => {
-        sellerToken = res.body.data[0].token;
+        sellerToken = res.body.data.token;
 
         done();
       });
@@ -108,7 +108,7 @@ describe("Testing Orders Enpoints", () => {
       .end((err, res) => {
         expect(res).to.have.status(201);
 
-        carId = res.body.data[0].id;
+        carId = res.body.data.id;
 
         done();
       });
@@ -117,7 +117,7 @@ describe("Testing Orders Enpoints", () => {
   it("Buyer Creates Order successfully", done => {
     let orderObject = {
       car: carId,
-      amount: 150000
+      price_offered: 150000
     };
 
     requester
@@ -127,7 +127,7 @@ describe("Testing Orders Enpoints", () => {
       .end((err, res) => {
         expect(res).to.have.status(201);
 
-        orderId = res.body.data[0].id;
+        orderId = res.body.data.id;
         done();
       });
   });
@@ -135,7 +135,7 @@ describe("Testing Orders Enpoints", () => {
   it("Failes to create Order. Buyer can't buy own car", done => {
     let orderObject = {
       car: carId,
-      amount: 150000
+      price_offered: 150000
     };
 
     requester
@@ -143,7 +143,7 @@ describe("Testing Orders Enpoints", () => {
       .set("Authorization", sellerToken)
       .send(orderObject)
       .end((err, res) => {
-        expect(res).to.have.status(404);
+        expect(res).to.have.status(403);
         done();
       });
   });
@@ -151,7 +151,7 @@ describe("Testing Orders Enpoints", () => {
   it("Failes to create Order. Invalid Car Id", done => {
     let orderObject = {
       car: "1232",
-      amount: 150000
+      price_offered: 150000
     };
 
     requester
@@ -170,14 +170,14 @@ describe("Testing Orders Enpoints", () => {
       .set("Authorization", "Invalid Token")
       .send()
       .end((err, res) => {
-        expect(res).to.have.status(401);
+        expect(res).to.have.status(403);
         done();
       });
   });
 
   it("Buyer Updates Order Price", done => {
     const data = {
-      amount: 12500
+      price_offered: 12500
     };
     requester
       .patch("/order/" + orderId + "/price")
@@ -205,7 +205,7 @@ describe("Testing Orders Enpoints", () => {
 
   it("Returns error to update price of wrong Id", done => {
     const data = {
-      amount: 15500
+      price_offered: 15500
     };
     requester
       .patch("/order/120/price")

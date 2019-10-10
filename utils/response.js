@@ -36,6 +36,12 @@ class Response {
       .json({ status: 401, message, error: "Authentication Error" });
   }
 
+  static authorizationError(res, message) {
+    return res
+      .status(403)
+      .json({ status: 403, message, error: "Authorization Error" });
+  }
+
   static notFoundError(res, message) {
     return res.status(404).json({ status: 400, message, error: "Not Found" });
   }

@@ -75,33 +75,61 @@ export let checks = {
       .escape()
       .withMessage("manufacturer field is required")
   ],
-  patchCarCheckStatus: [
+  patchCarCheck: [
+    check("state")
+      .optional()
+      .isIn(["used", "new"])
+      .withMessage("State needs to be [used, new] "),
     check("status")
+      .optional()
       .isIn(["available", "sold"])
-      .withMessage("Status needs to be [available, sold] ")
-  ],
-  patchCarCheckPrice: [
+      .withMessage("Status needs to be [available, sold] "),
+    check("model")
+      .optional()
+      .isString()
+      .trim(" ")
+      .escape()
+      .withMessage("model is required"),
+    check("body_type")
+      .optional()
+      .isString()
+      .escape()
+      .trim(" ")
+      .withMessage("body_type is required"),
     check("price")
+      .optional()
       .isDecimal()
-      .withMessage("price  field is required needs to be decimal")
+      .escape()
+      .withMessage("price field is required")
+      .custom(value => {
+        if (value <= 0) {
+          throw new Error("Price must be a number and larger than 0");
+        }
+        return true;
+      }),
+    check("manufacturer")
+      .optional()
+      .isString()
+      .trim(" ")
+      .escape()
+      .withMessage("manufacturer field is required")
   ],
   postOrderCheck: [
     check("car")
-      .trim(" ")
-      .isString()
+      .isInt()
       .escape()
-      .withMessage("Car is a required Field"),
-    check("amount")
+      .withMessage("Car is a required Field and must be an integer"),
+    check("price_offered")
       .isDecimal()
-      .withMessage("amount is a required Field")
+      .withMessage("price_offered is a required Field")
   ],
   updateOrderPriceCheck: [
-    check("amount")
+    check("price_offered")
       .isDecimal()
-      .withMessage("amount field is required")
+      .withMessage("price_offered field is required")
       .custom(value => {
         if (value <= 0) {
-          throw new Error("Amount must be a number and larger than 0");
+          throw new Error("price_offered must be a number and larger than 0");
         }
         return true;
       })
