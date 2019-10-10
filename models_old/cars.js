@@ -1,11 +1,11 @@
-const helper = require("../utils/helper");
-const queries = require("../utils/queries");
-const client = require("../services/connection");
-const carData = [];
+import { generateId } from "../utils/helper";
+import { selectQuery, deleteQuery, insertQuery } from "../utils/queries";
+
+import client from "../services/connection";
 
 class Car {
   constructor(car) {
-    this.id = helper.generateId();
+    this.id = generateId();
     this.owner = car.token.userId;
     this.state = car.state;
     this.status = "available";
@@ -16,7 +16,7 @@ class Car {
     this.primary_image = "image.jpg";
   }
 
-  static saveCar(car, done) {
+  static async saveCar(car, done) {
     const query =
       "INSERT INTO cars(id,owner,state,status,price,model,manufacturer,body_type,primary_image) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *";
 
@@ -32,13 +32,20 @@ class Car {
       car.primary_image
     ];
 
-    client.query(query, values, (err, res) => {
-      if (err) {
-        done([err], null);
-      } else {
-        done(null, res.rows);
-      }
-    });
+    try {
+      let car = await insertQuery("cars", values);
+      return car;
+    } catch (error) {
+      throw error;
+    }
+
+    // client.query(query, values, (err, res) => {
+    //   if (err) {
+    //     done([err], null);
+    //   } else {
+    //     done(null, res.rows);
+    //   }
+    // });
   }
 
   static searchCars(queries, done) {
@@ -57,7 +64,7 @@ class Car {
   }
 
   static async findById(car_id) {
-    let cars = queries.selectQuery("cars", "id", car_id);
+    let cars = await selectQuery("cars", "id", car_id);
 
     return cars;
   }
@@ -106,19 +113,9 @@ class Car {
   }
 
   static async deleteOne(car, done) {
-    let cars = queries.deleteQuery("cars", "id", car);
-
+    let cars = deleteQuery("cars", "id", car);
     return cars;
-    // let query = `DELETE FROM cars WHERE id='${car}' RETURNING *`;
-
-    // client.query(query, (err, res) => {
-    //   if (err) {
-    //     done(err, null);
-    //   } else {
-    //     done(null, res);
-    //   }
-    // });
   }
 }
 
-module.exports = Car;
+export default Car;

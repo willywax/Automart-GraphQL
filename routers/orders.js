@@ -1,37 +1,32 @@
-const express = require("express");
+import express from "express";
+import orderController from "../controllers/orders";
+import { checks, validationResults } from "../middlewares/validatator";
+import auth from "../middlewares/authentication";
 
-const router = express.Router();
+export const orderRouter = express.Router();
 
-const orderController = require("../controllers/orders");
-
-const validators = require("../middlewares/validatator");
-
-const auth = require("../middlewares/authentication");
-
-router.post(
+orderRouter.post(
   "/",
   auth,
-  validators.checks.postOrderCheck,
-  validators.validationResults,
+  checks.postOrderCheck,
+  validationResults,
   orderController.saveOrder
 );
 
-router.get("/", auth, orderController.getOrder);
+orderRouter.get("/", auth, orderController.getOrder);
 
-router.patch(
+orderRouter.patch(
   "/:id/price",
   auth,
-  validators.checks.updateOrderPriceCheck,
-  validators.validationResults,
+  checks.updateOrderPriceCheck,
+  validationResults,
   orderController.updateOrder
 );
 
-router.patch(
+orderRouter.patch(
   "/:id/status",
   auth,
-  validators.checks.updateOrderStatusCheck,
-  validators.validationResults,
+  checks.updateOrderStatusCheck,
+  validationResults,
   orderController.updateOrder
 );
-
-module.exports = router;

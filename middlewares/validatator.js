@@ -1,7 +1,7 @@
-const { check, validationResult } = require("express-validator/check");
-const Response = require("../utils/response");
+import { check, validationResult } from "express-validator/check";
+import Response from "../utils/response";
 
-exports.checks = {
+export let checks = {
   checkAdmin: [
     check("email")
       .isEmail()
@@ -113,7 +113,7 @@ exports.checks = {
   ]
 };
 
-exports.validationResults = (req, res, next) => {
+export let validationResults = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {

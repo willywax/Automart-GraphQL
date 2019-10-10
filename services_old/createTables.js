@@ -1,6 +1,5 @@
-const pool = require("./connection");
-
-const { tables } = require("./tables");
+import pool from "./connection";
+import { tables } from "./tables";
 
 tables.forEach(element => {
   prepareTables(element);

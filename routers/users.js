@@ -1,34 +1,29 @@
-const express = require("express");
+import express from "express";
+import { checks, validationResults } from "../middlewares/validatator";
+import { users, admin } from "../middlewares/setup";
+import userController from "../controllers/users";
+import { createAdmin } from "../controllers/admin";
 
-const router = express.Router();
+export const userRouter = express.Router();
 
-const validator = require("../middlewares/validatator");
-
-const setup = require("../middlewares/setup");
-
-const userController = require("../controllers/users");
-const adminController = require("../controllers/admin");
-
-router.post(
+userRouter.post(
   "/signup",
-  setup.users,
-  validator.checks.singUpCheck,
-  validator.validationResults,
+  users,
+  checks.singUpCheck,
+  validationResults,
   userController.signUp
 );
-router.post(
+userRouter.post(
   "/signin",
-  validator.checks.singInCheck,
-  validator.validationResults,
+  checks.singInCheck,
+  validationResults,
   userController.login
 );
 
-router.post(
+userRouter.post(
   "/setup",
-  setup.admin,
-  validator.checks.checkAdmin,
-  validator.validationResults,
-  adminController.createAdmin
+  admin,
+  checks.checkAdmin,
+  validationResults,
+  createAdmin
 );
-
-module.exports = router;

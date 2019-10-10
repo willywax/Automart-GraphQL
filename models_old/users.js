@@ -1,12 +1,13 @@
-const helper = require("../utils/helper");
-const client = require("../services/connection");
+import { generateId, encrypt, decrypt, generateToken } from "../utils/helper";
+
+import { client } from "../services/connection";
 
 class User {
   constructor(user) {
-    this.id = helper.generateId();
+    this.id = generateId();
     this.first_name = user.firstName;
     this.last_name = user.lastName;
-    this.password = helper.encrypt(user.password);
+    this.password = encrypt(user.password);
     this.email = user.email;
     this.address = user.address;
     this.is_admin = false;
@@ -20,7 +21,7 @@ class User {
         if (emails.rows.length !== 0) {
           let user = emails.rows;
 
-          const authenticate = helper.decrypt(
+          const authenticate = decrypt(
             user[0].password,
             authenticatingUser.password
           );
@@ -29,7 +30,7 @@ class User {
           delete user[0].password;
 
           if (authenticate) {
-            user[0].token = helper.generateToken(user[0]);
+            user[0].token = generateToken(user[0]);
             done(null, user);
           } else {
             done("Incorrect Password", null);
@@ -94,11 +95,11 @@ class User {
     const query =
       "INSERT INTO users(id, first_name, last_name, email, password, address, is_admin)VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *";
     const values = [
-      helper.generateId(),
+      generateId(),
       "Admin",
       "Admin",
       user.email,
-      helper.encrypt(user.password),
+      encrypt(user.password),
       "Admin Address",
       true
     ];
@@ -113,4 +114,4 @@ class User {
   }
 }
 
-module.exports = User;
+export default User;

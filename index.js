@@ -1,5 +1,6 @@
-const http = require("http");
-const app = require("./app");
+import "@babel/polyfill";
+import http from "http";
+import { app } from "./app";
 
 const normalizePort = val => {
   const port = parseInt(val, 10);
@@ -16,7 +17,8 @@ const normalizePort = val => {
 
 const port = normalizePort(process.env.PORT || 3000);
 app.set("port", port);
-const server = http.createServer(app);
+
+export const server = http.createServer(app);
 
 server.on("listening", () => {
   const address = server.address();
@@ -24,5 +26,3 @@ server.on("listening", () => {
   console.log(`Listening on ${bind}`);
 });
 server.listen(app.get("port"));
-
-module.exports = server;

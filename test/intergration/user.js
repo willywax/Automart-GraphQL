@@ -1,13 +1,17 @@
-const chai = require("chai");
-const chaiHttp = require("chai-http");
+import "@babel/polyfill";
+
+import chai from "chai";
+import chaiHttp from "chai-http";
+import assert from "assert";
+
 const expect = chai.expect;
 
 chai.use(chaiHttp);
 const url = "http://localhost:3000/api/v1";
 const requester = chai.request.agent(url);
 
-const index = require("../../index");
-const app = require("../../app");
+import index from "../../index";
+import app from "../../app";
 
 describe("Testing User Enpoints", () => {
   it("Fails to create Admin", done => {
