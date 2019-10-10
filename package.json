@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node index.js",
-    "debug": "nodemon --inspect-brk --exec babel-node index.js",
-    "test": "npm run migrate:dev && nyc mocha ./test/**/**.js --require @babel/register --recursive --timeout 10000 --exit",
+    "dev": "nodemon --exec babel-node ./src/index.js",
+    "debug": "nodemon --inspect-brk --exec babel-node ./src/index.js",
+    "test": "npm run migrate:dev && nyc mocha ./src/test/**/**.js --require @babel/register --recursive --timeout 10000 --exit",
     "coverage": "nyc --reporter=lcov  npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "lint": "eslint '**/*.js'",
-    "lint:fix": "prettier-eslint '**/*.js' --write",
+    "lint": "eslint '/src/**/*.js'",
+    "lint:fix": "prettier-eslint '/src/**/*.js' --write",
     "migrate:dev": "sequelize db:migrate:undo:all && sequelize db:migrate && npm run seed --env development",
     "seed": "sequelize db:seed:all"
   },
@@ -50,7 +50,7 @@
     "pg": "^7.11.0",
     "sequelize": "^5.19.4",
     "sequelize-cli": "^5.5.1",
-    "swagger-ui": "^3.22.3",
+    "swagger-ui": "^3.24.2",
     "swagger-ui-express": "^4.0.6",
     "upgrade": "^1.1.0",
     "uuid": "^3.3.2"
