@@ -19,14 +19,14 @@ export let checks = {
       .trim(" ")
       .isLength({ min: 5 })
       .withMessage("Password must have a min of 5 characters"),
-    check("firstName")
+    check("first_name")
       .trim(" ")
       .isLength({ min: 1 })
-      .withMessage("firstName is required Field"),
-    check("lastName")
+      .withMessage("first_name is required Field"),
+    check("last_name")
       .trim(" ")
       .isLength({ min: 1 })
-      .withMessage("lastName is a required Field"),
+      .withMessage("last_name is a required Field"),
     check("address")
       .trim(" ")
       .isLength({ min: 5 })

@@ -1,5 +1,4 @@
 /** Verifies if the User is a registered User */
-
 import { decodeToken } from "../utils/helper";
 import Response from "../utils/response";
 

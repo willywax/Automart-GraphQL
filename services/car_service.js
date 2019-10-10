@@ -1,5 +1,4 @@
-import { Cars } from "../database/models/index";
-import Car from "../models_old/cars";
+import { Cars } from "../database/models";
 
 class CarService {
   static async saveCar(car) {

@@ -1,47 +1,60 @@
-import User from "../models/users";
+import UserService from "../services/users_service";
 import Response from "../utils/response";
-import { generateToken, removeKeys } from "../utils/helper";
+import { generateToken, removeKeys, encrypt, decrypt } from "../utils/helper";
 
 class UserController {
-  signUp(req, res, next) {
-    const newUser = new User(req.body);
+  async signUp(req, res, next) {
+    try {
+      const { email, password } = req.body;
+      let foundUser = await UserService.findUser({ email });
+      if (foundUser) return Response.conflictError(res, "User already exists");
 
-    User.saveUser(newUser, (err, user) => {
-      if (err) {
-        res
-          .status(404)
-          .json(new Response(404, null, err, "Sign Up Failed").response());
-      } else {
-        user[0].token = generateToken(user[0]);
-        user[0] = removeKeys(user[0], ["password"]);
-        res
-          .status(201)
-          .json(
-            new Response(201, user, null, "Registered Succcessfully").response()
-          );
-      }
-    });
+      req.body.password = encrypt(password);
+
+      let newUser = await UserService.saveUser(req.body);
+
+      newUser.dataValues.token = generateToken(newUser);
+      return Response.customResponse(
+        res,
+        201,
+        "User added successfully",
+        newUser
+      );
+    } catch (error) {
+      return Response.serverError(res, error);
+    }
   }
+  async login(req, res, next) {
+    try {
+      const { email, password } = req.body;
+      console.log(email);
+      let foundUser = await UserService.findUser({ email });
 
-  login(req, res, next) {
-    const user = {
-      email: req.body.email,
-      password: req.body.password
-    };
+      if (!foundUser)
+        return Response.authenticationError(
+          res,
+          "Incorrect email or password used"
+        );
 
-    User.logInUser(user, (err, user) => {
-      if (err) {
-        res
-          .status(404)
-          .json(new Response(404, null, err, "Incorrect Details").response());
-      } else {
-        res
-          .status(200)
-          .json(
-            new Response(200, user, null, "Signed In Succcessfully").response()
-          );
-      }
-    });
+      let authenticated = decrypt(foundUser.password, password);
+
+      if (!authenticated)
+        return Response.authenticationError(
+          res,
+          "Incorrect email or password used"
+        );
+
+      foundUser.dataValues.token = generateToken(foundUser);
+
+      return Response.customResponse(
+        res,
+        200,
+        "User authenticated successfully",
+        foundUser
+      );
+    } catch (error) {
+      return Response.serverError(res, error);
+    }
   }
 }
 
