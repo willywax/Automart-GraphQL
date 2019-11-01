@@ -14,26 +14,12 @@ import index from "../../index";
 import app from "../../app";
 
 describe("Testing User Enpoints", () => {
-  it("Fails to create Admin", done => {
-    let userDetails = {
-      email: "test@automart.com",
-      password: "123123"
-    };
-    requester
-      .post("/auth/setup")
-      .send(userDetails)
-      .end((err, res) => {
-        expect(res).to.have.status(401);
-        done();
-      });
-  });
-
   it("Register User User", done => {
     let userDetails = {
       email: "test@automart.com",
       password: "123123",
-      firstName: "firstName",
-      lastName: "lastName",
+      first_name: "firstName",
+      last_name: "lastName",
       address: "144 Posta"
     };
     requester
@@ -51,15 +37,15 @@ describe("Testing User Enpoints", () => {
     let userDetails = {
       email: "test@automart.com",
       password: "123123",
-      firstName: "firstName",
-      lastName: "lastName",
+      first_name: "firstName",
+      last_name: "lastName",
       address: "144 Posta"
     };
     requester
       .post("/auth/signup")
       .send(userDetails)
       .end((err, res) => {
-        expect(res).to.have.status(404);
+        expect(res).to.have.status(409);
 
         done();
       });
@@ -88,7 +74,7 @@ describe("Testing User Enpoints", () => {
       .post("/auth/signin")
       .send(userDetails)
       .end((err, res) => {
-        expect(res).to.have.status(404);
+        expect(res).to.have.status(401);
 
         done();
       });
@@ -103,7 +89,7 @@ describe("Testing User Enpoints", () => {
       .post("/auth/signin")
       .send(userDetails)
       .end((err, res) => {
-        expect(res).to.have.status(404);
+        expect(res).to.have.status(401);
 
         done();
       });

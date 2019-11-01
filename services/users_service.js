@@ -1,5 +1,25 @@
-import { Users } from "../database/models";
+import sequelize from "sequelize";
+import database from "../database/models";
 
-class UserService {}
+const { Users } = database;
 
-export default UserServices;
+class UserService {
+  static async saveUser(user) {
+    try {
+      return await Users.create(user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async findUser(param) {
+    try {
+      let users = await Users.findOne({ where: param });
+      return users;
+    } catch (error) {
+      throw error;
+    }
+  }
+}
+
+export default UserService;

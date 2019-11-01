@@ -28,7 +28,6 @@ class User {
 
           //Removing Password Field
           delete user[0].password;
-
           if (authenticate) {
             user[0].token = generateToken(user[0]);
             done(null, user);

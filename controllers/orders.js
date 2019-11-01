@@ -1,73 +1,84 @@
-import Order from "../models/orders";
 import Response from "../utils/response";
+import OrderService from "../services/order_service";
+import CarService from "../services/car_service";
 
 class OrderController {
-  saveOrder(req, res, next) {
-    req.body.buyer = req.body.token.userId;
-    const newOrder = new Order(req.body);
+  async saveOrder(req, res, next) {
+    try {
+      req.body.buyer = req.body.user;
+      const { buyer, price_offered, car } = req.body;
 
-    Order.saveOrder(newOrder, (err, order) => {
-      if (err) {
-        res
-          .status(404)
-          .json(
-            new Response(404, null, err, "Order failed to create").response()
-          );
-      } else {
-        res
-          .status(201)
-          .json(
-            new Response(
-              201,
-              order,
-              null,
-              "Order created successfully"
-            ).response()
-          );
-      }
-    });
-  }
+      let [carFound] = await CarService.findCar({ id: car });
 
-  getOrder(req, res, next) {
-    Order.getOrders()
-      .then(orders => {
-        res
-          .status(200)
-          .json(new Response(200, orders, null, "Orders Queried successfully"));
-      })
-      .catch(err => {
-        res
-          .status(404)
-          .json(new Response(404, null, err, "Failed to get Orders"));
+      if (!carFound)
+        return Response.notFoundError(res, "Invalid car Id passed");
+
+      if (carFound.dataValues.owner === req.body.user)
+        return Response.authorizationError(
+          res,
+          "Seller can not bid for their own car"
+        );
+      let foundOrder = await OrderService.findOrder({
+        buyer,
+        price_offered,
+        car
       });
+
+      if (foundOrder.length > 1)
+        return Response.conflictError(res, "Order already saved");
+
+      const newOrder = await OrderService.saveOrder(req.body);
+
+      return Response.customResponse(
+        res,
+        201,
+        "Order created successfully",
+        newOrder
+      );
+    } catch (error) {
+      return Response.serverError(res, error);
+    }
   }
 
-  updateOrder(req, res, next) {
-    Order.updateOrder(req.params.id, req.body, (err, orders) => {
-      if (err) {
-        res
-          .status(404)
-          .json(
-            new Response(404, null, err, "Order failed to update").response()
-          );
-      } else {
-        let response =
-          orders.length === 0
-            ? new Response(
-                404,
-                orders,
-                null,
-                "Failed to update Order. Invalid Order Id"
-              ).response()
-            : new Response(
-                200,
-                orders,
-                null,
-                "Order Updated Successfully"
-              ).response();
-        res.status(response.status).json(response);
-      }
-    });
+  async getOrder(req, res, next) {
+    try {
+      let orders = await OrderService.findOrder();
+
+      if (orders.length < 1)
+        return Response.notFoundError(res, "Order not found");
+
+      return Response.customResponse(
+        res,
+        200,
+        "Order retrieved successfully",
+        orders
+      );
+    } catch (error) {
+      return Response.serverError(res, error);
+    }
+  }
+
+  async updateOrder(req, res, next) {
+    try {
+      req.body.buyer = req.body.user;
+      let orders = await OrderService.findOrder({ id: req.params.id });
+
+      if (orders.length < 1)
+        return Response.notFoundError(res, "Order not found");
+
+      let updatedOrder = await OrderService.updateOrder(req.body, {
+        id: req.params.id
+      });
+
+      return Response.customResponse(
+        res,
+        200,
+        "Order updated successfully",
+        updatedOrder
+      );
+    } catch (error) {
+      return Response.serverError(res, error);
+    }
   }
 }
 

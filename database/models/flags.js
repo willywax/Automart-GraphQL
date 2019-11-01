@@ -12,10 +12,10 @@ export default (sequelize, DataTypes) => {
   );
   Flags.associate = function(models) {
     // associations can be defined here
-    Flags.belongTo(models.Cars, {
+    Flags.belongsTo(models.Cars, {
       foreignKey: "car"
     });
-    Flags.belongTo(models.Users, {
+    Flags.belongsTo(models.Users, {
       foreignKey: "userId"
     });
   };

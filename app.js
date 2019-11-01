@@ -5,9 +5,9 @@ import swaggerUi from "swagger-ui-express";
 
 import swaggerDocument from "./swagger.json";
 
-import userRouter from "./routers/users";
-import carRouter from "./routers/cars";
-import orderRouter from "./routers/orders";
+import { userRouter } from "./routers/users";
+import { carRouter } from "./routers/cars";
+import { orderRouter } from "./routers/orders";
 
 import { getError } from "./utils/helper";
 

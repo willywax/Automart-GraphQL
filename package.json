@@ -5,18 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec babel-node index.js",
-    "test": "npm run drop && npm run configure-admin && nyc mocha ./test/**/**.js --require @babel/register --recursive --timeout 10000 --exit",
-    "createTables": "babel-node ./services/createTables.js",
-    "travis": "npm run createTables",
-    "drop": "babel-node ./services/dropSchema.js && npm run schema && npm run createTables",
-    "schema": "babel-node ./services/createSchema.js",
+    "debug": "nodemon --inspect-brk --exec babel-node index.js",
+    "test": "npm run migrate:dev && nyc mocha ./test/**/**.js --require @babel/register --recursive --timeout 10000 --exit",
     "coverage": "nyc --reporter=lcov  npm test",
-    "configure-admin": "babel-node ./maintest/main.js",
-    "deploy": "npm run drop && node index.js",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint '**/*.js'",
     "lint:fix": "prettier-eslint '**/*.js' --write",
-    "migrate:dev": "sequelize db:migrate:undo:all && sequelize db:migrate"
+    "migrate:dev": "sequelize db:migrate:undo:all && sequelize db:migrate && npm run seed --env development",
+    "seed": "sequelize db:seed:all"
   },
   "husky": {
     "hooks": {
@@ -60,8 +56,6 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.3",
-    "@babel/register": "^7.6.2",
     "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",

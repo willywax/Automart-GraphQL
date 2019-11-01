@@ -15,7 +15,8 @@ export default {
         type: Sequelize.INTEGER
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: "PENDING"
       },
       price_offered: {
         type: Sequelize.DECIMAL

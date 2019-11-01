@@ -1,148 +1,95 @@
 import Response from "../utils/response";
-import Car from "../models/cars";
+import CarService from "../services/car_service";
 
 class CarController {
   async saveCar(req, res, next) {
     try {
-      let newCar = new Car(req.body);
+      req.body.owner = req.body.user;
+      const { manufacturer, model, state, body_type, price, owner } = req.body;
+      let foundCar = await CarService.findCar({
+        manufacturer,
+        model,
+        state,
+        body_type,
+        price,
+        owner
+      });
 
-      let car = await Car.saveCar(newCar);
+      if (foundCar.length > 0)
+        return Response.conflictError(res, "Car already saved");
 
-      res
-        .status(201)
-        .json(
-          new Response(201, car, null, "Car created Successfully").response()
-        );
+      let car = await CarService.saveCar(req.body);
+      return Response.customResponse(res, 201, "Car created successfully", car);
     } catch (error) {
-      res
-        .status(404)
-        .json(new Response(404, null, err, "Car failed to create").response());
+      Response.serverError(res, "Something went wrong");
     }
   }
-  /** 
-  saveCar(req, res, next) {
-   
-    let newCar = new Car(req.body);
 
-    Car.saveCar(newCar, (err, car) => {
-      if (err) {
-        res
-          .status(404)
-          .json(
-            new Response(404, null, err, "Car failed to create").response()
-          );
-      } else {
-        res
-          .status(201)
-          .json(
-            new Response(201, car, null, "Car created Successfully").response()
-          );
-      }
-    });
-  }
-  **/
-
-  getCars(req, res, next) {
-    let queries = req.query;
-
-    Car.searchCars(queries, (err, cars) => {
-      if (err) {
-        res
-          .status(404)
-          .json(new Response(404, null, err, "Failed to get Cars").response());
-      } else {
-        let response =
-          cars.length === 0
-            ? new Response(404, cars, null, "No Car Found").response()
-            : new Response(
-                200,
-                cars,
-                null,
-                "Car Returned Successfully"
-              ).response();
-        res.status(response.status).json(response);
-      }
-    });
+  async getCars(req, res, next) {
+    try {
+      let cars = await CarService.findCar({});
+      Response.customResponse(res, 200, "Car retrieved successfully", cars);
+    } catch (error) {
+      Response.serverError(res, error);
+    }
   }
 
-  getOneCar(req, res, next) {
-    console.log("ID " + req.params.id);
-    let result = Car.findById(req.params.id);
+  async getOneCar(req, res, next) {
+    try {
+      const foundCar = await CarService.findCar({ id: req.params.id });
 
-    result
-      .then(car => {
-        let response =
-          car.rows.length === 0
-            ? new Response(404, car.rows, null, "Car not Found").response()
-            : new Response(200, car.rows, null, "Car Found").response();
-        res.status(response.status).json(response);
-      })
-      .catch(err => {
-        res
-          .status(404)
-          .json(new Response(404, null, err, "Car Not found").response());
-      });
+      if (foundCar.length < 1)
+        return Response.notFoundError(res, "Car not found");
+
+      Response.customResponse(res, 200, "Car retrieved successfully", foundCar);
+    } catch (error) {
+      return Response.serverError(res, error);
+    }
   }
 
-  updateCar(req, res, next) {
-    let findCar = Car.findById(req.params.id);
+  async updateCar(req, res, next) {
+    try {
+      req.body.owner = req.body.user;
+      const foundCar = await CarService.findCar({ id: req.params.id });
 
-    Car.updateOne(req.params.id, req.body, (err, cars) => {
-      if (err) {
-        res
-          .status(404)
-          .json(
-            new Response(404, null, err, "Failed to update Cars").response()
-          );
-      } else {
-        let response =
-          cars.length === 0
-            ? new Response(
-                404,
-                cars,
-                null,
-                "Failed to update Car. Car Invalid Id"
-              ).response()
-            : new Response(
-                200,
-                cars,
-                null,
-                "Car Updated Successfully"
-              ).response();
-        res.status(response.status).json(response);
-      }
-    });
+      if (foundCar.length === 0)
+        return Response.notFoundError(res, "Car not Found");
+
+      let updatedCar = await CarService.updateCar(
+        { id: req.params.id },
+        req.body
+      );
+
+      return Response.customResponse(
+        res,
+        200,
+        "Car updated successfully",
+        updatedCar
+      );
+    } catch (error) {
+      return Response.serverError(res, "Something went wrong");
+    }
   }
 
-  deleteCar(req, res, next) {
-    if (req.body.token.role) {
-      let result = Car.deleteOne(req.params.id);
-      result
-        .then(car => {
-          let response =
-            car.rowCount === 0
-              ? new Response(404, car.rows, null, "Car not Found").response()
-              : new Response(
-                  200,
-                  car.rows,
-                  null,
-                  "Car Deleted sucessfully"
-                ).response();
-          res.status(response.status).json(response);
-        })
-        .catch(err => {
-          res
-            .status(404)
-            .json(
-              new Response(404, null, err, "Failed to delete Car").response()
-            );
-        });
-    } else {
-      res
-        .status(401)
-        .json(
-          new Response(401, null, "Not Authorized", "Only admin can delete Car")
-        );
+  async deleteCar(req, res, next) {
+    try {
+      const foundCar = await CarService.findCar({ id: req.params.id });
+
+      if (foundCar.length === 0)
+        return Response.notFoundError(res, "Car not Found");
+
+      if (!req.body.is_admin && foundCar.owner !== req.user.id)
+        return Response.authorizationError(res, "Only admin can delete cars");
+      let deletedCar = await CarService.deleteCar({ id: req.params.id });
+
+      return Response.customResponse(
+        res,
+        200,
+        "Car deleted successfully",
+        deletedCar
+      );
+    } catch (error) {
+      return esponse.serverError(res, "Something went wrong");
     }
   }
 }
