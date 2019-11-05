@@ -1,1 +1,1 @@
-web: npm run drop && node index.js
+web: npm run migrate:dev && npm run dev
