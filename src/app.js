@@ -3,7 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import swaggerUi from "swagger-ui-express";
 
-import swaggerDocument from "./swagger.json";
+import swaggerDocument from "../swagger.json";
 
 import { userRouter } from "./routers/users";
 import { carRouter } from "./routers/cars";
