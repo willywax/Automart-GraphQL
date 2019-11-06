@@ -4,6 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "babel -d ./build ./src",
+    "prebuild": "rm -rf build/*",
+    "start": "NODE_ENV=production node ./build/index.js",
+    "prestart": "npm run build",
+    "prod": "babel-node ./src/index.js",
     "dev": "nodemon --exec babel-node ./src/index.js",
     "debug": "nodemon --inspect-brk --exec babel-node ./src/index.js",
     "test": "npm run migrate:dev && nyc mocha ./src/test/**/**.js --require @babel/register --recursive --timeout 10000 --exit",
@@ -32,6 +37,7 @@
     "npm": "6.9.0"
   },
   "dependencies": {
+    "@babel/cli": "^7.7.0",
     "@babel/core": "^7.5.5",
     "@babel/node": "^7.5.5",
     "@babel/polyfill": "^7.4.4",

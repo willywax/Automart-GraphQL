@@ -1,1 +1,1 @@
-web: npm run migrate:dev && npm run dev
+web: npm run migrate:dev && npm start
