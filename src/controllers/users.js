@@ -3,57 +3,43 @@ import Response from "../utils/response";
 import { generateToken, removeKeys, encrypt, decrypt } from "../utils/helper";
 
 class UserController {
-  async signUp(req, res, next) {
+  async signUp(args, req) {
     try {
-      const { email, password } = req.body;
+      let { email, password } = args;
       let foundUser = await UserService.findUser({ email });
       if (foundUser) return Response.conflictError(res, "User already exists");
 
-      req.body.password = encrypt(password);
+      args.password = encrypt(password);
 
-      let newUser = await UserService.saveUser(req.body);
+      let newUser = await UserService.saveUser(args);
 
       newUser.dataValues.token = generateToken(newUser);
-      return Response.customResponse(
-        res,
-        201,
-        "User added successfully",
-        newUser
-      );
+
+      return newUser
     } catch (error) {
-      return Response.serverError(res, error);
+      return error;
     }
   }
-  async login(req, res, next) {
+  async login(args, req) {
     try {
-      const { email, password } = req.body;
-      console.log(email);
+
+      const { email, password } = args;
       let foundUser = await UserService.findUser({ email });
-
-      if (!foundUser)
-        return Response.authenticationError(
-          res,
-          "Incorrect email or password used"
-        );
-
+      
+      if (!foundUser) throw new Error('User does not exist')
+      
+      console.log('Found User ', foundUser.password);
+      console.log('Password ', password);
       let authenticated = decrypt(foundUser.password, password);
-
-      if (!authenticated)
-        return Response.authenticationError(
-          res,
-          "Incorrect email or password used"
-        );
-
+      
+      if (!authenticated)  throw new Error('Incorret email or password')
+      
       foundUser.dataValues.token = generateToken(foundUser);
 
-      return Response.customResponse(
-        res,
-        200,
-        "User authenticated successfully",
-        foundUser
-      );
+      return foundUser.dataValues;
     } catch (error) {
-      return Response.serverError(res, error);
+      throw error;
+     
     }
   }
 }

@@ -1,28 +1,39 @@
-import "@babel/polyfill";
-import http from "http";
-import { app } from "./app";
+import express from "express";
+import bodyParser from "body-parser";
+import graphQLHTTP from 'express-graphql';
+import schema from './graphql/schema';
+import resolvers from './graphql/resolvers';
 
-const normalizePort = val => {
-  const port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    return val;
-  }
+export const app = express();
 
-  if (port >= 0) {
-    return port;
-  }
-  return false;
-};
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
 
-const port = normalizePort(process.env.PORT || 3000);
-app.set("port", port);
-
-export const server = http.createServer(app);
-
-server.on("listening", () => {
-  const address = server.address();
-  const bind = typeof address === "string" ? `pipe${address}` : `port ${port}`;
-  console.log(`Listening on ${bind}`);
+  next();
 });
-server.listen(app.get("port"));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+
+
+app.use('/automart',graphQLHTTP({
+  schema: schema,
+  rootValue: resolvers,
+  graphiql: true
+}));
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, ()=>{
+  console.log(`Server running at port ${port}`);
+}) 
