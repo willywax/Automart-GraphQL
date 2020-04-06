@@ -1,25 +1,24 @@
-"use strict";
-export default {
+'use strict';
+module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("Orders", {
+    return queryInterface.createTable('Flags', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      buyer: {
-        type: Sequelize.INTEGER
-      },
       car: {
         type: Sequelize.INTEGER
       },
-      status: {
-        type: Sequelize.STRING,
-        defaultValue: "PENDING"
+      userId: {
+        type: Sequelize.INTEGER
       },
-      price_offered: {
-        type: Sequelize.DECIMAL
+      reason: {
+        type: Sequelize.STRING
+      },
+      description: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -28,14 +27,10 @@ export default {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      deletedAt: {
-        allowNull: true,
-        type: Sequelize.DATE
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("Orders");
+    return queryInterface.dropTable('Flags');
   }
 };

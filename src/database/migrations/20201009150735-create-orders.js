@@ -1,38 +1,35 @@
 "use strict";
 export default {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("Cars", {
+    return queryInterface.createTable("Orders", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      owner: {
+      buyer: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        references: {
+          model: "Users",
+          key: "id",
+          as: "buyer"
+        }
       },
-      state: {
-        type: Sequelize.STRING
+      car: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Cars",
+          key: "id",
+          as: "car"
+        }
       },
       status: {
         type: Sequelize.STRING,
-        defaultValue: "AVAILABLE"
+        defaultValue: "PENDING"
       },
-      price: {
+      price_offered: {
         type: Sequelize.DECIMAL
-      },
-      model: {
-        type: Sequelize.STRING
-      },
-      manufacturer: {
-        type: Sequelize.STRING
-      },
-      body_type: {
-        type: Sequelize.STRING
-      },
-      primary_image: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -41,10 +38,14 @@ export default {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      deletedAt: {
+        allowNull: true,
+        type: Sequelize.DATE
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("Cars");
+    return queryInterface.dropTable("Orders");
   }
 };

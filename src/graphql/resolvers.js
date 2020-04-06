@@ -1,4 +1,5 @@
 import userController from '../controllers/users';
+import carController from '../controllers/cars';
 
 
 // The root provides a resolver function for each API endpoint
@@ -7,7 +8,11 @@ const root = {
       return 'Hello world!';
     },
     createUser: userController.signUp,
-    loginUser: userController.login
+    loginUser: userController.login,
+    saveCar: carController.saveCar,
+    updateCar: carController.updateCar,
+    getOneCar: carController.getOneCar,
+    getCars: carController.getCars
   };
 
 export default root;

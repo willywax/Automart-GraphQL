@@ -7,7 +7,7 @@ class UserController {
     try {
       let { email, password } = args;
       let foundUser = await UserService.findUser({ email });
-      if (foundUser) return Response.conflictError(res, "User already exists");
+      if (foundUser) throw new Error("User already exists");
 
       args.password = encrypt(password);
 
@@ -15,7 +15,7 @@ class UserController {
 
       newUser.dataValues.token = generateToken(newUser);
 
-      return newUser
+      return newUser.dataValues;
     } catch (error) {
       return error;
     }

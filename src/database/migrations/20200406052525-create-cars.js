@@ -1,35 +1,43 @@
-"use strict";
-export default {
+'use strict';
+module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("Flags", {
+    return queryInterface.createTable('Cars', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      car: {
+      owner: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Cars",
-          key: "id",
-          as: "car"
-        }
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+        foreignKey: true,
+        onDelete: "CASCADE",
         references: {
           model: "Users",
           key: "id",
-          as: "user"
+          as: "owner"
         }
       },
-      reason: {
+      state: {
         type: Sequelize.STRING
       },
-      description: {
+      status: {
+        type: Sequelize.STRING,
+        defaultValue: "AVAILABLE"
+      },
+      price: {
+        type: Sequelize.STRING
+      },
+      model: {
+        type: Sequelize.STRING
+      },
+      manufacturer: {
+        type: Sequelize.STRING
+      },
+      body_type: {
+        type: Sequelize.STRING
+      },
+      primary_image: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -43,6 +51,6 @@ export default {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("Flags");
+    return queryInterface.dropTable('Cars');
   }
 };
