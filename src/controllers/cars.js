@@ -35,8 +35,13 @@ class CarController {
       // Removing the users key from search
       delete args.user;
 
-      let cars = await CarService.getAll();
-      console.log(cars);
+      const results = await CarService.getAll();
+      const cars = results.map(car => car.dataValues)
+
+      cars.forEach(car => {
+        car.owner = car.User.dataValues
+      })
+
       return cars;
     } catch (error) {
       throw error;
@@ -48,10 +53,9 @@ class CarController {
       isAuth(args, req)
       const foundCar = await CarService.getOne({ id: args.id });
 
-      console.log('Found Car ', foundCar);
-
       if (!foundCar) throw new Error('Car not found')
 
+      foundCar.owner = foundCar.dataValues.User.dataValues;
       return foundCar.dataValues;
     } catch (error) {
       throw error;
@@ -85,9 +89,11 @@ class CarController {
 
       if (!foundCar) throw new Error('Car not Found')
 
-      if (!args.is_admin && foundCar.owner !== args.user.id) throw new Error("Only admin can delete cars")
+      console.log('Args ', args);
 
-      let deletedCar = await CarService.deleteCar({ id: req.params.id });
+      if (!args.user.role && foundCar.owner !== args.user.userId) throw new Error("Only admin can delete cars")
+
+      let deletedCar = await CarService.deleteCar({ id: args.id });
 
       return deletedCar.dataValues;
 

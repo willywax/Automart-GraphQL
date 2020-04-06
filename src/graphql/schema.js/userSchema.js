@@ -1,8 +1,7 @@
-// import { gql } from 'graphql';
 
 export const userSchema = `
     type User {
-        id: Int,
+        id: ID!,
         first_name: String!,
         last_name: String!,
         email: String!,

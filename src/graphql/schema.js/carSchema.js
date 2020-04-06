@@ -1,7 +1,7 @@
 
 export const carSchema = `
     type Car {
-        id: Int!,
+        id: ID!,
         owner: User!,
         state: String!,
         status: String!,

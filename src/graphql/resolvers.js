@@ -12,7 +12,8 @@ const root = {
     saveCar: carController.saveCar,
     updateCar: carController.updateCar,
     getOneCar: carController.getOneCar,
-    getCars: carController.getCars
+    getCars: carController.getCars,
+    deleteCar: carController.deleteCar
   };
 
 export default root;
