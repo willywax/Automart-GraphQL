@@ -64,7 +64,6 @@ The Application has no special configuration needed. App has been intergrated wi
 
 
 
-
 ## Running the project
     `nodemon index.js`  or `npm start `
 

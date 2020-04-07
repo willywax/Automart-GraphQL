@@ -1,6 +1,6 @@
 import database from "../database/models";
-const { Cars } = database;
 
+const { Cars, Users } = database;
 class CarService {
   static async saveCar(car) {
     try {
@@ -10,10 +10,31 @@ class CarService {
     }
   }
 
-  static async findCar(param) {
+  static async getAll() {
     try {
-      console.log(param);
-      return await Cars.findAll({ where: param });
+      return await Cars.findAll({
+        include: [
+          {
+            model: Users
+          }
+        ]
+       });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async getOne(param) {
+    try {
+      console.log('Param === ', param);
+      return await Cars.findOne({ 
+        where: param, 
+        include: [
+          {
+            model: Users
+          }
+        ]
+       });
     } catch (error) {
       throw error;
     }

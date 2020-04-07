@@ -1,95 +1,104 @@
-import Response from "../utils/response";
 import CarService from "../services/car_service";
+import isAuth from '../middlewares/authentication';
 
 class CarController {
-  async saveCar(req, res, next) {
+  async saveCar(args, req) {
     try {
-      req.body.owner = req.body.user;
-      const { manufacturer, model, state, body_type, price, owner } = req.body;
-      let foundCar = await CarService.findCar({
+      isAuth(args, req);
+      
+      const { user } = args;
+      delete args.user;
+      const { manufacturer, model, state, body_type, price, owner } = args;
+      const foundCar = await CarService.getOne({
         manufacturer,
         model,
         state,
         body_type,
-        price,
-        owner
+        price: parseInt(price),
+        owner: parseInt(owner)
       });
 
-      if (foundCar.length > 0)
-        return Response.conflictError(res, "Car already saved");
+      if (foundCar) throw new Error("Car already saved");
 
-      let car = await CarService.saveCar(req.body);
-      return Response.customResponse(res, 201, "Car created successfully", car);
+      const car = await CarService.saveCar(args);
+      return car.dataValues;
+  
     } catch (error) {
-      Response.serverError(res, "Something went wrong");
+      throw new Error(error)
     }
   }
 
-  async getCars(req, res, next) {
+  async getCars(args, req, next) {
     try {
-      let cars = await CarService.findCar({});
-      Response.customResponse(res, 200, "Car retrieved successfully", cars);
+      isAuth(args, req);
+
+      // Removing the users key from search
+      delete args.user;
+
+      const results = await CarService.getAll();
+      const cars = results.map(car => car.dataValues)
+
+      cars.forEach(car => {
+        car.owner = car.User.dataValues
+      })
+
+      return cars;
     } catch (error) {
-      Response.serverError(res, error);
+      throw error;
     }
   }
 
-  async getOneCar(req, res, next) {
+  async getOneCar(args, req) {
     try {
-      const foundCar = await CarService.findCar({ id: req.params.id });
+      isAuth(args, req)
+      const foundCar = await CarService.getOne({ id: args.id });
 
-      if (foundCar.length < 1)
-        return Response.notFoundError(res, "Car not found");
+      if (!foundCar) throw new Error('Car not found')
 
-      Response.customResponse(res, 200, "Car retrieved successfully", foundCar);
+      foundCar.owner = foundCar.dataValues.User.dataValues;
+      return foundCar.dataValues;
     } catch (error) {
-      return Response.serverError(res, error);
+      throw error;
     }
   }
 
-  async updateCar(req, res, next) {
+  async updateCar(args, req) {
     try {
-      req.body.owner = req.body.user;
-      const foundCar = await CarService.findCar({ id: req.params.id });
+      isAuth(args, req);
+      args.owner = req.body.user;
+      const foundCar = await CarService.getOne({ id: args.id });
 
-      if (foundCar.length === 0)
-        return Response.notFoundError(res, "Car not Found");
+      if (foundCar.length === 0) throw new Error('Car not Found')
 
       let updatedCar = await CarService.updateCar(
-        { id: req.params.id },
-        req.body
+        { id: args.id },
+        ...args
       );
 
-      return Response.customResponse(
-        res,
-        200,
-        "Car updated successfully",
-        updatedCar
-      );
+      return updatedCar.dataValues;
+
     } catch (error) {
-      return Response.serverError(res, "Something went wrong");
+      throw error;
     }
   }
 
-  async deleteCar(req, res, next) {
+  async deleteCar(args, req) {
     try {
-      const foundCar = await CarService.findCar({ id: req.params.id });
+      isAuth(args, req);
+      const foundCar = await CarService.getOne({ id: args.id });
 
-      if (foundCar.length === 0)
-        return Response.notFoundError(res, "Car not Found");
+      if (!foundCar) throw new Error('Car not Found')
 
-      if (!req.body.is_admin && foundCar.owner !== req.user.id)
-        return Response.authorizationError(res, "Only admin can delete cars");
-      let deletedCar = await CarService.deleteCar({ id: req.params.id });
+      console.log('Args ', args);
 
-      return Response.customResponse(
-        res,
-        200,
-        "Car deleted successfully",
-        deletedCar
-      );
+      if (!args.user.role && foundCar.owner !== args.user.userId) throw new Error("Only admin can delete cars")
+
+      let deletedCar = await CarService.deleteCar({ id: args.id });
+
+      return deletedCar.dataValues;
+
     } catch (error) {
-      return esponse.serverError(res, "Something went wrong");
+      throw error;
     }
   }
 }
